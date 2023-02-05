@@ -8,7 +8,7 @@ const QueryInWindow = {windowId: chrome.windows.WINDOW_ID_CURRENT};
 
 
 
-class Listeners {
+export class Listeners {
   static init() {
     chrome.tabGroups.onUpdated.addListener(Listeners.onTabGroupUpdated);
   };
@@ -107,7 +107,7 @@ button.addEventListener("click", async () => {
 
 
 
-function init() {
+export function init() {
   Listeners.init();
   console.log("initialized listeners");
 }
