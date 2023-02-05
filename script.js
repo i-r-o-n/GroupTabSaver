@@ -129,12 +129,20 @@ function getTabs() {
     newGroup.classList.add("tabGroup");
     newGroup.innerHTML = `
         <div class="groupName">
-          ${tabinfo.title}
-          <img src="/openIcon.svg">
+          ${element.tabinfo.title}
+          <img src="/save.svg">
         </div>
   
         <ul class="tabList">
-          <li>
+        `;
+    for (const tab of element.tabs) {
+      newGroup += `<li>
+        <img src="${element.tabs.favIconUrl}">
+      </li>`;
+    }
+    
+    html += `</ul>`;
+         ` <li>
             <img src="https://www.ads.com/favicon.svg">
             <a href="https://hackernoon.com/building-a-new-tab-chrome-extension-with-zero-dependencies-5zlh3ue6">https://hackernoon.com/building-a-new-tab-chrome-extension-with-zero-dependencies-5zlh3ue6</a>
           </li>
