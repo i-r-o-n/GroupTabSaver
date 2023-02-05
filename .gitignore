@@ -1,9 +1,9 @@
-*.build
-*.cache
-*.config
-*.upm
+.build
+.cache
+.config
+.upm
 
-*/node_modules
+node_modules
 
 .replit
 replit.nix

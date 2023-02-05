@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../index.ts"],
-  "sourcesContent": ["\n// tab.title, tab.url\n\n// const tabs = await chrome.tabs.query()\n\n// tabs.forEach(tab => tab.groupId)\n\n\n// function async openTabGroup(tabList: Tab[]): None {\n//   const tabIds = tabs.map(({ id }) => id);\n//   const group = await chrome.tabs.group({ tabIds });\n//   await chrome.tabGroups.update(group, { title: \"DOCS\" });\n\n//   chrome.tabs.create()\n// };\n\nfunction getTabGroups(): TabGroup[] {\n  chrome.tabGroups.query()\n};\n\nfunction parseTabTrunk(tab: Tab[]): string[] {\n\n};\n\nfunction main() {\n  console.log(getTabGroups())\n}\n\nmain()\n\n\n// listener for when group is updated -> call a function "],
-  "mappings": ";AAgBA,SAAS,eAA2B;AAClC,SAAO,UAAU,MAAM;AACzB;AAAC;AAED,SAAS,cAAc,KAAsB;AAE7C;AAAC;AAED,SAAS,OAAO;AACd,UAAQ,IAAI,aAAa,CAAC;AAC5B;AAEA,KAAK;",
-  "names": []
-}

@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../communicator.ts"],
-  "sourcesContent": ["export default class Communicator {\n  \n}"],
-  "mappings": ";;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA,MAAO,aAA2B;AAElC;",
-  "names": []
-}
