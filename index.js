@@ -1,3 +1,7 @@
+import { foo } from "./src/manager.js";
+
+foo();
+
 // attribute of tab without a group
 const NoGroup = chrome.tabGroups.TAB_GROUP_ID_NONE;
 // search in the the current window
@@ -6,9 +10,7 @@ const QueryInWindow = {windowId: chrome.windows.WINDOW_ID_CURRENT};
 
 // function parseTabTrunk(tab) {};
 
-
-
-export class Listeners {
+class Listeners {
   static init() {
     chrome.tabGroups.onUpdated.addListener(Listeners.onTabGroupUpdated);
   };
@@ -106,8 +108,7 @@ button.addEventListener("click", async () => {
 });
 
 
-
-export function init() {
+function init() {
   Listeners.init();
   console.log("initialized listeners");
 }
