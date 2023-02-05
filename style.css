@@ -1,0 +1,215 @@
+html{
+  background-color: black;
+  background-image: url(/images/bg.jpg);
+  background-position: center; /* Center the image */
+  background-repeat: no-repeat; /* Do not repeat the image */
+  background-size: cover;
+  color:white;
+}
+.searchContainer {
+  position: fixed;
+  top: 30px;
+  left: 24px;
+  display:flex;
+}
+.searchContainer form {
+  display:flex;
+}
+.searchContainer input[type=text] {
+  width: 100%;
+  padding: 12px 20px;
+  box-sizing: border-box;
+
+  font-size: 17px;
+  border: none;
+}
+.searchContainer button {
+  padding: 6px 10px;
+
+  background: #ddd;
+  font-size: 17px;
+  border: none;
+  cursor: pointer;
+  display:inline-block;
+}
+
+
+
+
+.relitiveEls {
+  
+    margin: auto;
+    width: 85%;
+    margin-top: 100px;
+}
+
+#clock {
+  font-family: Arial, Helvetica, sans-serif;
+  margin:auto;
+  text-align: center;
+}
+#clockTime {
+    font-size: 72px;
+    position: relative;
+    /* font-family: "Lucida Console", "Courier New", monospace; */
+}
+#clockDate{
+  font-size:24px;
+}
+#seccondHand {
+    background: rgb(76 163 212 / 50%);
+    width: 10px;
+    height: 55px;
+  top:20%;
+    left:49.5%;
+    position: absolute;
+    display: inline-block;
+
+  transition:transform .5s;
+}
+
+/* Tab group code */
+#tabGroups{
+  margin-top:3em;
+  display: flex;
+  gap: 30px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.tabGroup{
+/*   display:flex; */
+  height: 160px;
+  text-align: center;
+}
+.groupName {
+  
+    width: 90px;
+    height:90px;
+    text-align: center;
+  padding:.25em;
+    border-radius: 8px;
+    display: inline-block;
+    background: rgb(66 65 77 / 75%);
+    color:rgba(255, 255, 255, 0.800000011920929);
+  vertical-align: bottom;
+  position: relative;
+  
+}
+.groupName img{
+  width: 40px;
+  display:block;
+  position:absolute;
+
+  top:70%;
+  left:50%;
+  transform: translate(-50%, -50%);
+  transition: width, 0.2s linear;
+}
+.tabGroup:hover .tabList{
+  height: 100px;
+  transition: height, 0.2s linear;
+}
+.groupName:hover .actionImg{
+  width:50px;
+}
+.tabGroup:hover .groupName{
+      background: rgb(106 104 120 / 74%);
+}
+.tabList{
+  white-space: nowrap;
+
+  width:160px;
+  height:0;
+  overflow: hidden;
+  overflow-y: auto;
+}
+/* .tabList a {
+  display: block;
+} */
+
+.tabList {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+.tabList li img {
+  width: 24px;
+}
+ .tabList li a {
+  color:white;
+  text-decoration: none;
+}
+.tabList li{
+    display: flex;
+    gap: 4px;
+  margin-bottom: .25em;
+  align-items: center;
+}
+img.deleteButton {
+  width: 16px;
+  background: rgb(141 233 233);
+  padding: 4px;
+  border-radius: 4px;
+  position: absolute;
+  top: 3px;
+  left: 133px;
+  /* transform: translate(-50%, -50%); */
+}
+.deleteContainer {
+  position: relative;
+  /* align-items: center; */
+  text-align: center;
+}
+
+#newGroups {
+  /* margin-top: 3em; */
+  display: flex;
+  gap: 30px;
+  flex-wrap: wrap;
+  justify-content: left;
+  /* border-radius: 1em; */
+  /* background: #2e5e5db3; */
+  /* padding: 1em; */
+}
+#newGroups .tabGroup {
+  height:unset;
+  display: flex;
+  padding: 1em;
+  border-radius: 15px;
+}
+
+#newGroups .tabGroup:hover {
+  background: rgb(106 104 120 / 74%);
+  
+}
+
+#newGroups .tabList {
+  height: 90px;
+  margin-left: 1em;
+}
+
+.newGroupsContainer {
+  margin-top: 3em;
+  /* display: flex; */
+  /* gap: 30px; */
+  /* flex-wrap: wrap; */
+  /* justify-content: left; */
+  border-radius: 1em;
+  background: #2e5e5db3;
+  padding: 1em;
+}
+h3.sectionTitle {
+  margin: 0;
+  margin-bottom: 1em;
+}
+
+@media screen and (max-width: 750px) {
+  #newGroups .tabGroup {
+
+    width: 100%;
+}
+#newGroups .tabList {
+
+  width: 100%;
+}
+}

@@ -10,7 +10,7 @@ const QueryInWindow = {windowId: chrome.windows.WINDOW_ID_CURRENT};
 
 // function parseTabTrunk(tab) {};
 
-class Listeners {
+export class Listeners {
   static init() {
     chrome.tabGroups.onUpdated.addListener(Listeners.onGroupUpdated);
   };
@@ -22,7 +22,7 @@ class Listeners {
 }
 
 
-class Reader {
+export class Reader {
 
   // get all tabs in active window
   static async getTabs() {
@@ -83,7 +83,7 @@ Reader.Groups = class {
 
 
 
-class Creator {
+export class Creator {
 
   static createTabFromURL(url) {
     chrome.tabs.create({url:url})
@@ -156,7 +156,7 @@ class Creator {
           function(groupId) {
             // console.log(["groupId",groupId])
             currentGroupId = groupId; 
-            chrome.tabGroups.update(groupId = currentGroupId, {collapsed: true, title: title})
+            chrome.tabGroups.update(groupId = currentGroupId, {title: title})
 
             // there as got be a way to await this but for now it stays in the call back
             urlList.slice(1).map(
@@ -196,29 +196,29 @@ class Creator {
 
 // TODO: remove upon integration with live page
 // button on test page for debugging purposes only
-const button = document.getElementById("button1");
-button.addEventListener("click", async () => {
-  console.log("button1")
-  // console.log(await Reader.getTabs());
-  // console.log(await Reader.getTabGroups());
-  // console.log((await Reader.getTabs()).map(tab => tab.favIconUrl));
-  console.log(await Creator.createGroupFromURLs2(
-    ["https://google.com/", "https://bing.com/", "https://duckduckgo.com/"], "search"));
-  // console.log(await Creator.addTabIdsToGroup(await Creator.createTabsFromURLs(
-  //   ["https://google.com/", "https://bing.com/", "https://duckduckgo.com/"])));
-});
+// const button = document.getElementById("button1");
+// button.addEventListener("click", async () => {
+//   console.log("button1")
+//   // console.log(await Reader.getTabs());
+//   // console.log(await Reader.getTabGroups());
+//   // console.log((await Reader.getTabs()).map(tab => tab.favIconUrl));
+//   console.log(await Creator.createGroupFromURLs2(
+//     ["https://google.com/", "https://bing.com/", "https://duckduckgo.com/"], "search"));
+//   // console.log(await Creator.addTabIdsToGroup(await Creator.createTabsFromURLs(
+//   //   ["https://google.com/", "https://bing.com/", "https://duckduckgo.com/"])));
+// });
 
-const button2 = document.getElementById("button2");
-button2.addEventListener("click", async () => {
-  console.log("button2")
-  Reader.getCurrentTabData();
+// const button2 = document.getElementById("button2");
+// button2.addEventListener("click", async () => {
+//   console.log("button2")
+//   Reader.getCurrentTabData();
 
-});
+// });
 
 
 // activate listeners
-function init() {
+export function init() {
   Listeners.init();
 }
 
-init();
+// init();
