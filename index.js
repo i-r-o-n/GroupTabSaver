@@ -34,6 +34,34 @@ class Reader {
     return await chrome.tabGroups.query(QueryInWindow);
   };
 
+  static async getCurrentTabData() {
+    //TODO:parilize this 
+    let tabs = await Reader.getTabs();
+    let groups = await Reader.getGroups();
+    let groupIds = groups.map(group => {
+      return group.id
+    })
+
+    let listToReturn = groups.map(group => {
+      return {
+        "tabinfo":group,
+        tabs:[]
+      }
+
+    })
+
+    // console.log(groupIds)
+    tabs.forEach(tab => {
+      let index = groupIds.indexOf(tab.groupId)
+      if(index != -1){
+        
+        listToReturn[index].tabs.push(tab)
+      }
+      
+    });
+    
+    return listToReturn
+  }
 }
 
 Reader.Tabs = class {
@@ -95,15 +123,67 @@ class Creator {
   };
 
   static async createGroupFromURLs2(urlList, title) {
+    let groupsTemp = (await Reader.getGroups())
+    let currentGroups = groupsTemp.map(group => group.title);
+    let currentGroupIds = groupsTemp.map(group => group.id);
+    console.log([title,currentGroups,title in currentGroups])
+    if(currentGroups.includes(title)){
+      let groupId = currentGroupIds[currentGroups.indexOf(title)]
+      console.log("asdfasdfasdfasdfasdffas")
+      if(!confirm(`Reset tab group ${title}?`)){
+        return
+      }else{
+        console.log((await Reader.getTabs()).forEach(tab => {
+          if(tab.groupId == groupId){
+            console.log(tab)
+            chrome.tabs.remove(tab.id)
+          }
+        }))
+        
+      }
+    }
+
     let _tabIds = [];
-    let _groupId = 0;
+    let currentGroupId = 0;
     //add the first tab to the group
-    chrome.tabs.create({url:urlList[0], active: false}, 
-      function(tab) {chrome.tabs.group({tabIds: tab.id},
-        function(groupId) {_groupId = groupId; chrome.tabGroups.update(groupId = _groupId, {collapsed: true, title: title})} )})
-    await urlList.slice(1).map(url => chrome.tabs.create({url:url, active:false},
-      function(tab) {_tabIds.push(tab.id)}))
-    await chrome.tabs.group({tabIds: +_tabIds, groupId: _groupId})
+    
+    await chrome.tabs.create(
+      {url:urlList[0], active: false}, 
+      function(tab) {
+        chrome.tabs.group({
+            tabIds: tab.id
+          },
+          function(groupId) {
+            // console.log(["groupId",groupId])
+            currentGroupId = groupId; 
+            chrome.tabGroups.update(groupId = currentGroupId, {collapsed: true, title: title})
+
+            // there as got be a way to await this but for now it stays in the call back
+            urlList.slice(1).map(
+              url => {
+                // console.log(url)
+                chrome.tabs.create({
+                    url:url, active:false
+                  },
+                  async function(tab) {
+                    // console.table([tab.id,currentGroupId]);
+                    await chrome.tabs.group({tabIds: tab.id, groupId: currentGroupId});
+                    _tabIds.push(tab.id);
+                  }
+                )
+              }
+        
+            )
+          } 
+        )
+      }
+      // function(groupId) {_groupId = groupId; chrome.tabGroups.update(groupId = _groupId, {collapsed: true, title: title})} )}
+    )
+
+    
+    
+    // console.log(_tabIds)
+    // await chrome.tabs.group({tabIds: _tabIds["1"], groupId: _groupId})
   };
 
   // group button pressed when group already exists
@@ -116,9 +196,9 @@ class Creator {
 
 // TODO: remove upon integration with live page
 // button on test page for debugging purposes only
-const button = document.querySelector("button");
+const button = document.getElementById("button1");
 button.addEventListener("click", async () => {
-
+  console.log("button1")
   // console.log(await Reader.getTabs());
   // console.log(await Reader.getTabGroups());
   // console.log((await Reader.getTabs()).map(tab => tab.favIconUrl));
@@ -126,6 +206,13 @@ button.addEventListener("click", async () => {
     ["https://google.com/", "https://bing.com/", "https://duckduckgo.com/"], "search"));
   // console.log(await Creator.addTabIdsToGroup(await Creator.createTabsFromURLs(
   //   ["https://google.com/", "https://bing.com/", "https://duckduckgo.com/"])));
+});
+
+const button2 = document.getElementById("button2");
+button2.addEventListener("click", async () => {
+  console.log("button2")
+  Reader.getCurrentTabData();
+
 });
 
 
