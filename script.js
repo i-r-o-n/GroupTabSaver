@@ -118,14 +118,14 @@ function getTabs() {
     console.log(element)
     const newGroup = document.createElement("div");
     newGroup.classList.add("tabGroup");
-    newGroup.onclick = function() { addGroupToStorage(element); };
+    // newGroup.onclick = function() { addGroupToStorage(element); };
 
     // console.log(element.tabinfo.title)
     // console.log(savedGroups)
     
     
     let groupHtml = `
-        <div class="groupName">
+        <div class="groupName" id=groupNameNew${element.tabinfo.title}>
           ${element.tabinfo.title}
           <img src="/images/${!(element.tabinfo.title in savedGroups)? 'save' : 'update'}.svg" class="actionImg">
         </div>
@@ -142,6 +142,9 @@ function getTabs() {
     groupHtml += `</ul>`;
     newGroup.innerHTML = groupHtml;
     newGroupsEl.appendChild(newGroup);
+    document.getElementById(`groupNameNew${element.tabinfo.title}`).addEventListener("click", () => {
+        addGroupToStorage(element.tabinfo.title)
+      });
   })
 }
 
