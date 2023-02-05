@@ -125,6 +125,7 @@ const newGroupsEl = document.getElementById('newGroups');
 function getTabs() {
   //imploment getting from extention
   exampleData.forEach(element => {
+    console.log(element)
     const newGroup = document.createElement("div");
     newGroup.classList.add("tabGroup");
     newGroup.innerHTML = `
@@ -138,23 +139,12 @@ function getTabs() {
     for (const tab of element.tabs) {
       newGroup += `<li>
         <img src="${element.tabs.favIconUrl}">
+        <a href="${element.tabs.url}">${element.tabs.title}</a>
       </li>`;
     }
     
-    html += `</ul>`;
-         ` <li>
-            <img src="https://www.ads.com/favicon.svg">
-            <a href="https://hackernoon.com/building-a-new-tab-chrome-extension-with-zero-dependencies-5zlh3ue6">https://hackernoon.com/building-a-new-tab-chrome-extension-with-zero-dependencies-5zlh3ue6</a>
-          </li>
-          <li>
-            <img src="https://www.ads.com/favicon.svg">
-            <a href="https://www.w3schools.com">https://www.w3schools.com</a>
-          </li>
-
-          
-        </ul>
-      `;
-    newGroupsEl.appendChild(para);
+    newGroup += `</ul>`;;
+    newGroupsEl.appendChild(newGroup);
   })
 }
 getTabs();
