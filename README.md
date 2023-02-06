@@ -1,9 +1,9 @@
 Extention Is the MAIN BRANCH
-If you want to run it, 
-open chrome://extensions/
-turn on developer mode
-download the Extention branch and upzip it
-click loadunpacked and direct it to the downloaded file
+1. If you want to run it, 
+2. open chrome://extensions/
+3. turn on developer mode
+4. download the Extention branch and upzip it
+5. click loadunpacked and direct it to the downloaded file
 
 ## Inspiration
 We were inspired by the grouping tabs feature on the google chrome browser and the lack of multi-tab shortcuts on any new tab page currently available. New tab shortcuts only lead to one website, but GroupTabSaver changes that by opening multiple tabs at once and organizing them into tab groups.
