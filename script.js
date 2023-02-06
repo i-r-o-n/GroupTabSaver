@@ -252,16 +252,16 @@ console.log(exampleData)
 getTabs();
 getTabsFromStorage();
 
-document.getElementById("login").addEventListener("click", () => {
-  let username = prompt("Enter your storage code")
-  // localStorage.setItem("username", username)
-  saveToAPI(username)
-});
-document.getElementById("cloudRetreive").addEventListener("click", () => {
-  let username = prompt("Enter your storage code")
-  // localStorage.setItem("username", username)
-  getFromAPI(username)
-});
+// document.getElementById("login").addEventListener("click", () => {
+//   let username = prompt("Enter your storage code")
+//   // localStorage.setItem("username", username)
+//   saveToAPI(username)
+// });
+// document.getElementById("cloudRetreive").addEventListener("click", () => {
+//   let username = prompt("Enter your storage code")
+//   // localStorage.setItem("username", username)
+//   getFromAPI(username)
+// });
 
 class Listeners {
   static init() {
