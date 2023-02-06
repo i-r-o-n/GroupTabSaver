@@ -4,6 +4,7 @@ html{
   background-position: center; /* Center the image */
   background-repeat: no-repeat; /* Do not repeat the image */
   background-size: cover;
+  background-attachment: fixed;
   color:white;
 }
 .searchContainer {
@@ -23,7 +24,7 @@ html{
   font-size: 17px;
   border: none;
 }
-.searchContainer button {
+.searchContainer button, #login, #cloudRetreive {
   padding: 6px 10px;
 
   background: #ddd;
@@ -32,10 +33,27 @@ html{
   cursor: pointer;
   display:inline-block;
 }
+.searchContainer button:hover, #login:hover, #cloudRetreive:hover {
 
+  background: #aea8a8;
 
+}
 
+#login {
+  top: 24px;
+  right: 30px;
+  position: fixed;
+  font-size: 17px;
+  padding: 12px 20px;
+}
 
+#cloudRetreive {
+  top:100px;
+  right: 30px;
+  position: fixed;
+  font-size: 17px;
+  padding: 12px 20px;
+}
 .relitiveEls {
   
     margin: auto;
@@ -202,6 +220,36 @@ h3.sectionTitle {
   margin: 0;
   margin-bottom: 1em;
 }
+
+img.hoverImage {
+  width: 14px;
+}
+.subtitle {
+  font-style: italic;
+  color: rgb(197 197 197);
+  font-size: 12px;
+}
+.hoverText {
+  display: block;
+  overflow: hidden;
+  height: 0px;
+  transition: height .3s;
+}
+.subtitle:hover .hoverText {
+  height: 18px;
+  transition: height .3s;
+}
+
+.howTo {
+  margin: auto;
+  width: 90%;
+  margin-top: 6em;
+  align-items: center;
+  display: block;
+  /* text-align: center; */
+}
+
+
 
 @media screen and (max-width: 750px) {
   #newGroups .tabGroup {

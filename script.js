@@ -114,37 +114,46 @@ const newGroupsEl = document.getElementById('newGroups');
 function getTabs() {
   //imploment getting from extention
   newGroupsEl.innerHTML = "";
+  console.log(exampleData)
   exampleData.forEach(element => {
-    console.log(element)
-    const newGroup = document.createElement("div");
-    newGroup.classList.add("tabGroup");
-    // newGroup.onclick = function() { addGroupToStorage(element); };
-
-    // console.log(element.tabinfo.title)
-    // console.log(savedGroups)
-    
-    
-    let groupHtml = `
-        <div class="groupName" id=groupNameNew${element.tabinfo.title}>
-          ${element.tabinfo.title}
-          <img src="/images/${!(element.tabinfo.title in savedGroups)? 'save' : 'update'}.svg" class="actionImg">
-        </div>
-  
-        <ul class="tabList">
-        `;
-    for (const tab of element.tabs) {
-      groupHtml += `<li>
-        <img src="${tab.favIconUrl}">
-        <a href="${tab.url}">${tab.title}</a>
-      </li>`;
+    if(element == null){
+      return
     }
+    // if(!element.tabinfo.title == ""){
+
+      console.log(element)
+      const newGroup = document.createElement("div");
+      newGroup.classList.add("tabGroup");
+      // newGroup.onclick = function() { addGroupToStorage(element); };
+
+      // console.log(element.tabinfo.title)
+      // console.log(savedGroups)
+      
+      
+      let groupHtml = `
+          <div class="groupName" id=groupNameNew${element.tabinfo.title}>
+            ${element.tabinfo.title}
+            <img src="/images/${!(element.tabinfo.title in savedGroups)? 'save' : 'update'}.svg" class="actionImg">
+          </div>
     
-    groupHtml += `</ul>`;
-    newGroup.innerHTML = groupHtml;
-    newGroupsEl.appendChild(newGroup);
-    document.getElementById(`groupNameNew${element.tabinfo.title}`).addEventListener("click", () => {
-        addGroupToStorage(element.tabinfo.title)
-      });
+          <ul class="tabList">
+          `;
+      for (const tab of element.tabs) {
+        groupHtml += `<li>
+          <img src="${tab.favIconUrl}">
+          <a href="${tab.url}">${tab.title}</a>
+        </li>`;
+      }
+      
+      groupHtml += `</ul>`;
+      newGroup.innerHTML = groupHtml;
+      newGroupsEl.appendChild(newGroup);
+      console.log(document.getElementById(`groupNameNew${element.tabinfo.title}`))
+      console.log(element.tabinfo.title)
+      document.getElementById(`groupNameNew${element.tabinfo.title}`).addEventListener("click", () => {
+          addGroupToStorage(element)
+        });
+    // }
   })
 }
 
@@ -158,7 +167,7 @@ function getTabsFromStorage() {
     if (savedGroups.hasOwnProperty(key)) {
       let element = savedGroups[key]
 
-      console.log(element)
+      console.table(element)
       const newGroup = document.createElement("div");
       newGroup.classList.add("tabGroup");
       // newGroup.onclick = function() { addGroupToStorage(element); };
@@ -199,6 +208,40 @@ function getTabsFromStorage() {
     }
   }
 }
+function getFromAPI(username){
+  fetch('https://GroupTabsSaverAPI-1.ahanaroychaudhu.repl.co/api/'+username)
+    .then((response) => {
+      return response.json();
+    })
+    .then((data) => {
+      let res = data;
+      console.log(res)
+      localStorage.setItem("savedGroups", JSON.stringify(res.data))
+      getTabs();
+      getTabsFromStorage();
+      });
+};
+
+function saveToAPI() {
+  let username = localStorage.getItem("username")
+  fetch('https://GroupTabsSaverAPI-1.ahanaroychaudhu.repl.co/api/'+username, {
+    method: 'POST', // or 'PUT'
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(savedGroups),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      console.log('Success:', data);
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
+}
+
+
+
 
 console.log(tabEditor)
 
@@ -208,6 +251,17 @@ console.log(exampleData)
 
 getTabs();
 getTabsFromStorage();
+
+document.getElementById("login").addEventListener("click", () => {
+  let username = prompt("Enter your storage code")
+  // localStorage.setItem("username", username)
+  saveToAPI(username)
+});
+document.getElementById("cloudRetreive").addEventListener("click", () => {
+  let username = prompt("Enter your storage code")
+  // localStorage.setItem("username", username)
+  getFromAPI(username)
+});
 
 class Listeners {
   static init() {
@@ -222,7 +276,7 @@ class Listeners {
     console.log("a tab group was updated!")
     exampleData = await tabEditor.Reader.getCurrentTabData();
     getTabs();
-    // getTabsFromStorage();
+    getTabsFromStorage();
   };
 }
 
