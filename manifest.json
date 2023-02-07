@@ -1,10 +1,10 @@
 {
   "manifest_version": 3,
-  "name": "Tab Manager",
+  "name": "Group Tab Saver",
   "description": "Load tab groups from a custom homepage",
   "version": "1.0",
   "chrome_url_overrides" : {
-    "newtab": "manager.html"
+    "newtab": "index.html"
   },
   "permissions": [
     "tabGroups",
