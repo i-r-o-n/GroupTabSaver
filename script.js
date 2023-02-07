@@ -11,15 +11,26 @@ function timeSet() {
   let s = d.getSeconds();
   let m = d.getMinutes();
   let h = d.getHours();
-  let angle =  (s*6 +180);
-  // if (angle == 534){
-  //   angleOffset+=1
-  // }
-  let angleToRotate = angle+(angleOffset*360)
+  let angle = (s*6);
+
   
-  // console.log(angleToRotate)
+  
+  console.table({
+    angle:angle,
+    angleOffset:angleOffset,
+    angleOffsetM:angleOffset%360,
+    angleToRotate:angleOffset  +180,
+
+  })
+  let difference = angle - (angleOffset%360)
+  if (difference < 0){
+    difference = 6;
+  }
+  angleOffset += difference
+  let angleToRotate = angleOffset  +180
+  // switched to substring from substr
   time.innerText = 
-    ("0" + h).substr(-2) + ":" + ("0" + m).substr(-2) ;
+    ("0" + h).substring(("0" + h).length - 2) + ":" + ("0" + m).substring(("0" + m).length - 2)  ;
 
   
   let rotate = "rotate(" +angleToRotate + "deg" +") ";
@@ -49,8 +60,6 @@ async function loadDataFromStorageSync() {
   }
 
 };
-
-
 
 function updateLocalStorageKey() {
   chrome.storage.sync.set({ "savedGroupsForSync": Object.keys(savedGroups) }).then(() => {
@@ -228,7 +237,10 @@ async function init(){
 
   Listeners.init();
 
-  return exampleData
+  document.getElementsByClassName("relitiveEls")[0].style.visibility = "visible";
+  document.getElementsByClassName("relitiveEls")[0].style.opacity = 1;
+
+  // return exampleData
 }
 
 init()

@@ -57,8 +57,12 @@ html{
 .relitiveEls {
   
     margin: auto;
+    min-height: 725px;
     width: 85%;
     margin-top: 100px;
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s, opacity 0.1s linear;
 }
 
 #clock {
