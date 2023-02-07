@@ -1,6 +1,6 @@
-change on tab update to not update the saved groups
+change on tab update to not update the saved groups DONE
 
-switch storage to chrome sync storage (and put each tab group in it's own place)
+switch storage to chrome sync storage (and put each tab group in it's own place) DONE
 
 add settings for each saved group
 

@@ -1,54 +1,11 @@
 import * as tabEditor from "./tabEditor.js";
 
 
-const storiesDiv = document.querySelector('#stories');
-
-const storyNode = (story) => {
-  var template = document.createElement('template');
-  template.innerHTML = story;
-  return template.content.childNodes[0];
-}
-
-const addStories = (stories) => {
-  for (let index in stories) {
-    const story = stories[index];
-    const html = `<div class="story">
-      <a href="${story.url}">${story.title}</a>
-    </div>`;
-    storiesDiv.appendChild(storyNode(html));
-  }
-}
-
-// if (localStorage.lastFetch && localStorage.tabs && (new Date() - localStorage.lastFetch) < (1000*60*60)) {
-//   addStories(JSON.parse(localStorage.stories));
-// } else {
-//   if (localStorage.stories) {
-//     addStories(JSON.parse(localStorage.stories));
-//   }
-
-//   fetch('https://api.hackernoon.com/featured-stories',{
-//       method: 'GET',
-//       mode: 'no-cors',
-//       // headers:{},
-//       credentials: 'include'
-//     })
-//     .then(response => response.json())
-//     .then(data => {
-//       if (!localStorage.stories) {
-//         addStories(data);
-//       }
-
-//       localStorage.setItem("stories", JSON.stringify(data));
-//       localStorage.setItem("lastFetch", new Date()-1);
-//     });
-// }
- 
-
 const time = document.getElementById('clockTimeSpan');
 const date = document.getElementById('clockDate');
 const hand = document.getElementById('seccondHand');
 const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-let angleOffset = 0 
+let angleOffset = 0;
 function timeSet() {
   let d = new Date();
   let s = d.getSeconds();
@@ -72,27 +29,53 @@ function timeSet() {
   let month = months[d.getMonth()];
   date.innerText = month + " "+ d.getDate() + ", " + d.getFullYear();
 }
-timeSet();
-setInterval(() => timeSet(),1000);
+
 
 let savedGroups = {};
-// localStorage.removeItem("savedGroups")
-console.log(localStorage.getItem("savedGroups"))
-if( localStorage.getItem("savedGroups") == null){
-  localStorage.setItem("savedGroups", JSON.stringify({}))
-}else{
-  savedGroups = JSON.parse(localStorage.getItem("savedGroups"))
-}
 
-async function updateLocalStorage(savedGroups) {
-  localStorage.setItem("savedGroups", JSON.stringify(savedGroups))
+async function loadDataFromStorageSync() {
+  let keys = await chrome.storage.sync.get(["savedGroupsForSync"])
+
+  console.log(keys)
+  if(keys == null){
+    updateLocalStorageKey()
+  }else{
+    await Promise.all(keys.savedGroupsForSync.map(async (key) => {
+      
+      savedGroups[key] = (await chrome.storage.sync.get([key]))[key]
+      // console.log(await chrome.storage.sync.get([key]))
+    }));
+
+  }
+
 };
 
+
+
+function updateLocalStorageKey() {
+  chrome.storage.sync.set({ "savedGroupsForSync": Object.keys(savedGroups) }).then(() => {
+    console.log("Value is set to " + Object.keys(savedGroups));
+  });
+};
+
+async function updateLocalStorage(element) {
+  chrome.storage.sync.set({ [element.tabinfo.title]:  element})
+  updateLocalStorageKey()
+};
+
+async function deleteFromLocalStorage(title) {
+  chrome.storage.sync.remove(title);
+  updateLocalStorageKey()
+}
+
+
 function addGroupToStorage(element) {
+  
+
   savedGroups[element.tabinfo.title] = element
   console.log(savedGroups)
   getTabsFromStorage()
-  updateLocalStorage(savedGroups);
+  updateLocalStorage(element);
   getTabs()
 }
 
@@ -105,7 +88,7 @@ function deleteGroup(title){
   delete savedGroups[title]
   console.log(savedGroups)
   getTabsFromStorage()
-  updateLocalStorage(savedGroups);
+  deleteFromLocalStorage(title);
   getTabs()
 }
 // window.deleteGroup = deleteGroup
@@ -162,6 +145,7 @@ const tabGroupsEl = document.getElementById('tabGroups');
 function getTabsFromStorage() {
   //imploment getting from extention
   tabGroupsEl.innerHTML="";
+  console.log(savedGroups)
   for (var key in savedGroups) {
     
     if (savedGroups.hasOwnProperty(key)) {
@@ -208,60 +192,7 @@ function getTabsFromStorage() {
     }
   }
 }
-function getFromAPI(username){
-  fetch('https://GroupTabsSaverAPI-1.ahanaroychaudhu.repl.co/api/'+username)
-    .then((response) => {
-      return response.json();
-    })
-    .then((data) => {
-      let res = data;
-      console.log(res)
-      localStorage.setItem("savedGroups", JSON.stringify(res.data))
-      getTabs();
-      getTabsFromStorage();
-      });
-};
 
-function saveToAPI() {
-  let username = localStorage.getItem("username")
-  fetch('https://GroupTabsSaverAPI-1.ahanaroychaudhu.repl.co/api/'+username, {
-    method: 'POST', // or 'PUT'
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(savedGroups),
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      console.log('Success:', data);
-    })
-    .catch((error) => {
-      console.error('Error:', error);
-    });
-}
-
-
-
-
-console.log(tabEditor)
-
-let exampleData = await tabEditor.Reader.getCurrentTabData();
-
-console.log(exampleData)
-
-getTabs();
-getTabsFromStorage();
-
-// document.getElementById("login").addEventListener("click", () => {
-//   let username = prompt("Enter your storage code")
-//   // localStorage.setItem("username", username)
-//   saveToAPI(username)
-// });
-// document.getElementById("cloudRetreive").addEventListener("click", () => {
-//   let username = prompt("Enter your storage code")
-//   // localStorage.setItem("username", username)
-//   getFromAPI(username)
-// });
 
 class Listeners {
   static init() {
@@ -276,8 +207,28 @@ class Listeners {
     console.log("a tab group was updated!")
     exampleData = await tabEditor.Reader.getCurrentTabData();
     getTabs();
-    getTabsFromStorage();
+    // getTabsFromStorage();
   };
 }
 
-Listeners.init();
+let exampleData;
+async function init(){
+  timeSet();
+  setInterval(() => timeSet(),1000);
+
+  await loadDataFromStorageSync()
+  // console.log(tabEditor)
+
+  exampleData = await tabEditor.Reader.getCurrentTabData();
+  
+  // console.log(exampleData)
+
+  getTabs();
+  getTabsFromStorage();
+
+  Listeners.init();
+
+  return exampleData
+}
+
+init()
