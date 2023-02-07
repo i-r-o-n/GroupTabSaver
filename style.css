@@ -1,9 +1,10 @@
 html{
   background-color: black;
-  background-image: url(bg.jpg);
+  background-image: url(/images/bg.jpg);
   background-position: center; /* Center the image */
   background-repeat: no-repeat; /* Do not repeat the image */
   background-size: cover;
+  background-attachment: fixed;
   color:white;
 }
 .searchContainer {
@@ -23,7 +24,7 @@ html{
   font-size: 17px;
   border: none;
 }
-.searchContainer button {
+.searchContainer button, #login, #cloudRetreive {
   padding: 6px 10px;
 
   background: #ddd;
@@ -32,10 +33,27 @@ html{
   cursor: pointer;
   display:inline-block;
 }
+.searchContainer button:hover, #login:hover, #cloudRetreive:hover {
 
+  background: #aea8a8;
 
+}
 
+#login {
+  top: 24px;
+  right: 30px;
+  position: fixed;
+  font-size: 17px;
+  padding: 12px 20px;
+}
 
+#cloudRetreive {
+  top:100px;
+  right: 30px;
+  position: fixed;
+  font-size: 17px;
+  padding: 12px 20px;
+}
 .relitiveEls {
   
     margin: auto;
@@ -65,7 +83,7 @@ html{
     position: absolute;
     display: inline-block;
 
-  transition:all .5s;
+  transition:transform .5s;
 }
 
 /* Tab group code */
@@ -109,7 +127,7 @@ html{
   height: 100px;
   transition: height, 0.2s linear;
 }
-.tabGroup:hover img{
+.groupName:hover .actionImg{
   width:50px;
 }
 .tabGroup:hover .groupName{
@@ -132,16 +150,114 @@ html{
   margin: 0;
   padding: 0;
 }
-.tabGroup:hover .tabList li img {
+.tabList li img {
   width: 24px;
 }
-.tabGroup:hover .tabList li a {
+ .tabList li a {
   color:white;
   text-decoration: none;
 }
-.tabGroup:hover .tabList li{
+.tabList li{
     display: flex;
     gap: 4px;
   margin-bottom: .25em;
   align-items: center;
+}
+img.deleteButton {
+  width: 16px;
+  background: rgb(141 233 233);
+  padding: 4px;
+  border-radius: 4px;
+  position: absolute;
+  top: 3px;
+  left: 133px;
+  /* transform: translate(-50%, -50%); */
+}
+.deleteContainer {
+  position: relative;
+  /* align-items: center; */
+  text-align: center;
+}
+
+#newGroups {
+  /* margin-top: 3em; */
+  display: flex;
+  gap: 30px;
+  flex-wrap: wrap;
+  justify-content: left;
+  /* border-radius: 1em; */
+  /* background: #2e5e5db3; */
+  /* padding: 1em; */
+}
+#newGroups .tabGroup {
+  height:unset;
+  display: flex;
+  padding: 1em;
+  border-radius: 15px;
+}
+
+#newGroups .tabGroup:hover {
+  background: rgb(106 104 120 / 74%);
+  
+}
+
+#newGroups .tabList {
+  height: 90px;
+  margin-left: 1em;
+}
+
+.newGroupsContainer {
+  margin-top: 3em;
+  /* display: flex; */
+  /* gap: 30px; */
+  /* flex-wrap: wrap; */
+  /* justify-content: left; */
+  border-radius: 1em;
+  background: #2e5e5db3;
+  padding: 1em;
+}
+h3.sectionTitle {
+  margin: 0;
+  margin-bottom: 1em;
+}
+
+img.hoverImage {
+  width: 14px;
+}
+.subtitle {
+  font-style: italic;
+  color: rgb(197 197 197);
+  font-size: 12px;
+}
+.hoverText {
+  display: block;
+  overflow: hidden;
+  height: 0px;
+  transition: height .3s;
+}
+.subtitle:hover .hoverText {
+  height: 18px;
+  transition: height .3s;
+}
+
+.howTo {
+  margin: auto;
+  width: 90%;
+  margin-top: 6em;
+  align-items: center;
+  display: block;
+  /* text-align: center; */
+}
+
+
+
+@media screen and (max-width: 750px) {
+  #newGroups .tabGroup {
+
+    width: 100%;
+}
+#newGroups .tabList {
+
+  width: 100%;
+}
 }

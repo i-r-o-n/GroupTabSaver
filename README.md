@@ -1,4 +1,5 @@
-Extention Is the MAIN BRANCH
+# GroupTabSaver-extension
+ 
 1. If you want to run it, 
 2. open chrome://extensions/
 3. turn on developer mode
