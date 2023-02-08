@@ -12,6 +12,7 @@ html{
   top: 30px;
   left: 24px;
   display:flex;
+  z-index: 3;
 }
 .searchContainer form {
   display:flex;

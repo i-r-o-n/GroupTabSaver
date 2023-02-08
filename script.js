@@ -1,6 +1,6 @@
 import * as tabEditor from "./tabEditor.js";
 
-import {colorsKey} from "./dist/colors.js";
+import {colorsKey,months} from "./dist/colors.js";
 /**
  * @param {string} text
  * @return {string}
@@ -17,7 +17,6 @@ function filterXSS(text) {
 const time = document.getElementById('clockTimeSpan');
 const date = document.getElementById('clockDate');
 const hand = document.getElementById('seccondHand');
-const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 let angleOffset = 0;
 function timeSet() {
   let d = new Date();
