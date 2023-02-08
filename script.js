@@ -1,5 +1,22 @@
 import * as tabEditor from "./tabEditor.js";
 
+// import * as HtmlSanitizer from "./xss.js";
+
+// import DOMPurify from 'isomorphic-dompurify';
+
+// console.log(DOMPurify)
+/**
+ * @param {string} text
+ * @return {string}
+ */
+function filterXSS(text) {
+  // return text
+  return DOMPurify.sanitize(text, { USE_PROFILES: {} })
+  var element = document.createElement('div');
+  element.innerText = text;
+  return element.innerHTML;
+}
+
 
 const time = document.getElementById('clockTimeSpan');
 const date = document.getElementById('clockDate');
@@ -61,6 +78,18 @@ async function loadDataFromStorageSync() {
 
 };
 
+// TODO: add to settings
+function resetLocalStorage() {
+  Object.keys(savedGroups).forEach(key => {
+    chrome.storage.sync.remove(key);
+  })
+  
+  chrome.storage.sync.set({ "savedGroupsForSync": [] }).then(() => {
+    console.log("Value is set to " + Object.keys(savedGroups));
+  });
+};
+// resetLocalStorage()
+
 function updateLocalStorageKey() {
   chrome.storage.sync.set({ "savedGroupsForSync": Object.keys(savedGroups) }).then(() => {
     console.log("Value is set to " + Object.keys(savedGroups));
@@ -89,7 +118,7 @@ function addGroupToStorage(element) {
 }
 
 function deleteGroup(title){
-  let x=confirm(`Are you sure you want to delete tab group ${title}`);
+  let x=confirm(`Are you sure you want to delete tab group ${filterXSS(title)}`);
   if (!x){
     return;
   }
@@ -111,7 +140,9 @@ function getTabs() {
     if(element == null){
       return
     }
-    // if(!element.tabinfo.title == ""){
+    if(filterXSS(element.tabinfo.title) == "" ){
+      return
+    }
 
       console.log(element)
       const newGroup = document.createElement("div");
@@ -121,10 +152,10 @@ function getTabs() {
       // console.log(element.tabinfo.title)
       // console.log(savedGroups)
       
-      
+      // console.log(filterXSS(element.tabinfo.title))
       let groupHtml = `
-          <div class="groupName" id=groupNameNew${element.tabinfo.title}>
-            ${element.tabinfo.title.replace(/_/g, " ")}
+          <div class="groupName" id=groupNameNew${filterXSS(element.tabinfo.title)}>
+            ${filterXSS(element.tabinfo.title.replace(/_/g, " "))}
             <img src="/images/${!(element.tabinfo.title in savedGroups)? 'save' : 'update'}.svg" class="actionImg">
           </div>
     
@@ -133,7 +164,7 @@ function getTabs() {
       for (const tab of element.tabs) {
         groupHtml += `<li>
           <img src="${tab.favIconUrl}">
-          <a href="${tab.url}">${tab.title}</a>
+          <a href="${tab.url}">${filterXSS(tab.title)}</a>
         </li>`;
       }
       
@@ -141,8 +172,8 @@ function getTabs() {
       newGroup.innerHTML = groupHtml;
       newGroupsEl.appendChild(newGroup);
       console.log(document.getElementById(`groupNameNew${element.tabinfo.title}`))
-      console.log(element.tabinfo.title)
-      document.getElementById(`groupNameNew${element.tabinfo.title}`).addEventListener("click", () => {
+      console.log(filterXSS(element.tabinfo.title))
+      document.getElementById(`groupNameNew${filterXSS(element.tabinfo.title)}`).addEventListener("click", () => {
           addGroupToStorage(element)
         });
     // }
@@ -167,13 +198,13 @@ function getTabsFromStorage() {
   
       let groupHtml = `
       <div class="deleteContainer">
-          <div class="groupName" id=groupName${element.tabinfo.title}>
-            ${element.tabinfo.title.replace(/_/g, " ")}
+          <div class="groupName" id=groupName${filterXSS(element.tabinfo.title)}>
+            ${filterXSS(element.tabinfo.title.replace(/_/g, " "))}
             <img src="/images/openIcon.svg" class="actionImg">
             
           
           </div>
-          <img class="deleteButton" id="deleteTitle${element.tabinfo.title}" src="/images/delete.svg">
+          <img class="deleteButton" id="deleteTitle${filterXSS(element.tabinfo.title)}" src="/images/delete.svg">
         </div>
           <ul class="tabList">
           `;
@@ -182,18 +213,18 @@ function getTabsFromStorage() {
       for (const tab of element.tabs) {
         groupHtml += `<li>
           <img src="${tab.favIconUrl}">
-          <a href="${tab.url}">${tab.title}</a>
+          <a href="${tab.url}">${filterXSS(tab.title)}</a>
         </li>`;
       }
       
       groupHtml += `</ul>`;
       newGroup.innerHTML = groupHtml;
       tabGroupsEl.appendChild(newGroup);
-      document.getElementById(`deleteTitle${element.tabinfo.title}`).addEventListener("click", () => {
+      document.getElementById(`deleteTitle${filterXSS(element.tabinfo.title)}`).addEventListener("click", () => {
         deleteGroup(element.tabinfo.title)
       });
 
-      document.getElementById(`groupName${element.tabinfo.title}`).addEventListener("click", () => {
+      document.getElementById(`groupName${filterXSS(element.tabinfo.title)}`).addEventListener("click", () => {
         tabEditor.Creator.createGroupFromURLs2(
             element.tabs.map(tab => tab.url), element.tabinfo.title);
         // deleteGroup(element.tabinfo.title)

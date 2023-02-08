@@ -1,6 +1,3 @@
-import { foo } from "./src/manager.js";
-
-foo();
 
 // attribute of tab without a group
 const NoGroup = chrome.tabGroups.TAB_GROUP_ID_NONE;
@@ -43,7 +40,7 @@ export class Reader {
     })
 
     let listToReturn = groups.map(group => {
-      group.title = group.title.replace(/ /g, "_")
+      group.title = DOMPurify.sanitize(group.title.replace(/ /g, "_"), { USE_PROFILES: { html: true } });
       return {
         "tabinfo":group,
         tabs:[]
