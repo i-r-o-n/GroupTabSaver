@@ -1,10 +1,6 @@
 import * as tabEditor from "./tabEditor.js";
 
-// import * as HtmlSanitizer from "./xss.js";
-
-// import DOMPurify from 'isomorphic-dompurify';
-
-// console.log(DOMPurify)
+import {colorsKey} from "./dist/colors.js";
 /**
  * @param {string} text
  * @return {string}
@@ -173,9 +169,11 @@ function getTabs() {
       newGroupsEl.appendChild(newGroup);
       console.log(document.getElementById(`groupNameNew${element.tabinfo.title}`))
       console.log(filterXSS(element.tabinfo.title))
-      document.getElementById(`groupNameNew${filterXSS(element.tabinfo.title)}`).addEventListener("click", () => {
-          addGroupToStorage(element)
-        });
+      let groupTouchTarget = document.getElementById(`groupNameNew${filterXSS(element.tabinfo.title)}`)
+      groupTouchTarget.addEventListener("click", () => {
+        addGroupToStorage(element)
+      });
+      groupTouchTarget.style.backgroundColor = colorsKey[element.tabinfo.color]
     // }
   })
 }
@@ -224,11 +222,14 @@ function getTabsFromStorage() {
         deleteGroup(element.tabinfo.title)
       });
 
-      document.getElementById(`groupName${filterXSS(element.tabinfo.title)}`).addEventListener("click", () => {
+      let groupTouchTarget = document.getElementById(`groupName${filterXSS(element.tabinfo.title)}`)
+      groupTouchTarget.addEventListener("click", () => {
         tabEditor.Creator.createGroupFromURLs2(
-            element.tabs.map(tab => tab.url), element.tabinfo.title);
+            element.tabs.map(tab => tab.url), element.tabinfo);
         // deleteGroup(element.tabinfo.title)
       });
+
+      groupTouchTarget.style.backgroundColor = colorsKey[element.tabinfo.color]
     }
   }
 }

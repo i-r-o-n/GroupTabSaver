@@ -62,7 +62,7 @@ html{
     margin-top: 100px;
     visibility: hidden;
     opacity: 0;
-    transition: visibility 0s, opacity 0.1s linear;
+    transition: visibility 0s, opacity 0.6s ease-out;
 }
 
 #clock {
@@ -88,6 +88,7 @@ html{
     display: inline-block;
 
   transition:transform .5s;
+  z-index: 5;
 }
 
 /* Tab group code */
@@ -115,6 +116,7 @@ html{
     color:rgba(255, 255, 255, 0.800000011920929);
   vertical-align: bottom;
   position: relative;
+  opacity: 77%;
   
 }
 .groupName img{

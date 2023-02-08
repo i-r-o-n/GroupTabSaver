@@ -16,6 +16,9 @@ Option to make custom ones
 
 Option to save individual tabs
 
+Fix scrorll bar and transiston witdth.
+
+Save Colors
 
 
 

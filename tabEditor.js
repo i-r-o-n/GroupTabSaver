@@ -120,7 +120,8 @@ export class Creator {
     //   })} );
   };
 
-  static async createGroupFromURLs2(urlList, title) {
+  static async createGroupFromURLs2(urlList, tabinfo) {
+    let title = tabinfo.title
     let groupsTemp = (await Reader.getGroups())
     let currentGroups = groupsTemp.map(group => group.title);
     let currentGroupIds = groupsTemp.map(group => group.id);
@@ -154,7 +155,7 @@ export class Creator {
           function(groupId) {
             // console.log(["groupId",groupId])
             currentGroupId = groupId; 
-            chrome.tabGroups.update(groupId = currentGroupId, {title: title})
+            chrome.tabGroups.update(groupId = currentGroupId, {color:tabinfo.color, title: title})
 
             // there as got be a way to await this but for now it stays in the call back
             urlList.slice(1).map(
