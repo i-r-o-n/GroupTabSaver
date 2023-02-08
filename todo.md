@@ -15,3 +15,11 @@ make search more custimizable
 Fix .releitive-ells to have dynamic height and scroll bar
 
 Make it work with spaces !!!
+
+Save Tab group Colors
+
+Option to save position
+
+Option to make custom ones
+
+Option to save individual tabs
