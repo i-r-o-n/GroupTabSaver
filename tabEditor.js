@@ -43,6 +43,7 @@ export class Reader {
     })
 
     let listToReturn = groups.map(group => {
+      group.title = group.title.replace(/ /g, "_")
       return {
         "tabinfo":group,
         tabs:[]
@@ -59,7 +60,7 @@ export class Reader {
       }
       
     });
-    
+    console.log(listToReturn)
     return listToReturn
   }
 }

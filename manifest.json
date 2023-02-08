@@ -12,7 +12,7 @@
     "storage"
   ],
   "action": {
-    "default_popup": "manager.html"
+    "default_popup": "index.html"
   },
   "icons": {
     "128": "images/icon128.png"

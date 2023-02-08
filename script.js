@@ -124,7 +124,7 @@ function getTabs() {
       
       let groupHtml = `
           <div class="groupName" id=groupNameNew${element.tabinfo.title}>
-            ${element.tabinfo.title}
+            ${element.tabinfo.title.replace(/_/g, " ")}
             <img src="/images/${!(element.tabinfo.title in savedGroups)? 'save' : 'update'}.svg" class="actionImg">
           </div>
     
@@ -168,7 +168,7 @@ function getTabsFromStorage() {
       let groupHtml = `
       <div class="deleteContainer">
           <div class="groupName" id=groupName${element.tabinfo.title}>
-            ${element.tabinfo.title}
+            ${element.tabinfo.title.replace(/_/g, " ")}
             <img src="/images/openIcon.svg" class="actionImg">
             
           
