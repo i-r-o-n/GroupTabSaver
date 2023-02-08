@@ -15,13 +15,13 @@ function timeSet() {
 
   
   
-  console.table({
-    angle:angle,
-    angleOffset:angleOffset,
-    angleOffsetM:angleOffset%360,
-    angleToRotate:angleOffset  +180,
+  // console.table({
+  //   angle:angle,
+  //   angleOffset:angleOffset,
+  //   angleOffsetM:angleOffset%360,
+  //   angleToRotate:angleOffset  +180,
 
-  })
+  // })
   let difference = angle - (angleOffset%360)
   if (difference < 0){
     difference = 6;

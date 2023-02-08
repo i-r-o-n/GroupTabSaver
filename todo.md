@@ -13,3 +13,5 @@ make search more custimizable
     add enter address 
 
 Fix .releitive-ells to have dynamic height and scroll bar
+
+Make it work with spaces !!!
