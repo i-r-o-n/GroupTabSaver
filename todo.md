@@ -18,9 +18,9 @@ Option to save individual tabs
 
 Fix scrorll bar and transiston witdth.
 
-Save Colors
 
 
+Save Colors DONE
 
 change on tab update to not update the saved groups DONE
 
