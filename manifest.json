@@ -13,5 +13,8 @@
   ],
   "action": {
     "default_popup": "manager.html"
+  },
+  "icons": {
+    "128": "images/icon128.png"
   }
 }
