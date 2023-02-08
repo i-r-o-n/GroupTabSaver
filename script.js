@@ -8,9 +8,6 @@ import {colorsKey,months} from "./dist/colors.js";
 function filterXSS(text) {
   // return text
   return DOMPurify.sanitize(text, { USE_PROFILES: {} })
-  var element = document.createElement('div');
-  element.innerText = text;
-  return element.innerHTML;
 }
 
 
