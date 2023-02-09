@@ -18,7 +18,15 @@ Option to save individual tabs
 
 Fix scrorll bar and transiston witdth.
 
+Make Options focusable
 
+Make Live tab option
+
+
+
+
+
+Use Defult Search DONE
 
 Save Colors DONE
 

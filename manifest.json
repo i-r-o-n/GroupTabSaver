@@ -9,7 +9,8 @@
   "permissions": [
     "tabGroups",
     "tabs",
-    "storage"
+    "storage",
+    "search"
   ],
   "action": {
     "default_popup": "index.html"

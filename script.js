@@ -49,7 +49,26 @@ function timeSet() {
   let month = months[d.getMonth()];
   date.innerText = month + " "+ d.getDate() + ", " + d.getFullYear();
 }
+function search(query){
+  chrome.search.query(
+    {text:query}
+  )
+    
+}
 
+function setUpSearchBar() {
+  const submitButton = document.getElementById('searchButton');
+  const searchBox = document.getElementById('searchBox');
+  submitButton.addEventListener('keydown', function onEvent(event) {
+      if (event.key === "Enter") {
+        search(searchBox.value)
+      }
+  });
+  submitButton.addEventListener("click", () => {
+    search(searchBox.value)
+  });
+  // searchBox
+}
 
 let savedGroups = {};
 
@@ -255,7 +274,7 @@ async function init(){
 
   await loadDataFromStorageSync()
   // console.log(tabEditor)
-
+  setUpSearchBar()
   exampleData = await tabEditor.Reader.getCurrentTabData();
   
   // console.log(exampleData)
