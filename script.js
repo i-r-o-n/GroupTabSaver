@@ -165,10 +165,10 @@ function getTabs() {
       
       // console.log(filterXSS(element.tabinfo.title))
       let groupHtml = `
-          <div class="groupName" id=groupNameNew${filterXSS(element.tabinfo.title)}>
-            ${filterXSS(element.tabinfo.title.replace(/_/g, " "))}
+          <button class="groupName" id=groupNameNew${filterXSS(element.tabinfo.title)}>
+            <span class="innerButtonText" >${filterXSS(element.tabinfo.title.replace(/_/g, " "))}</span>
             <img src="/images/${!(element.tabinfo.title in savedGroups)? 'save' : 'update'}.svg" class="actionImg">
-          </div>
+          </button>
     
           <ul class="tabList">
           `;
@@ -207,17 +207,18 @@ function getTabsFromStorage() {
       console.table(element)
       const newGroup = document.createElement("div");
       newGroup.classList.add("tabGroup");
+      // newGroup.tabIndex = 0;
       // newGroup.onclick = function() { addGroupToStorage(element); };
   
       let groupHtml = `
       <div class="deleteContainer">
-          <div class="groupName" id=groupName${filterXSS(element.tabinfo.title)}>
-            ${filterXSS(element.tabinfo.title.replace(/_/g, " "))}
+          <button tabindex="0" class="groupName" id=groupName${filterXSS(element.tabinfo.title)}>
+            <span class="innerButtonText" >${filterXSS(element.tabinfo.title.replace(/_/g, " "))}</span>
             <img src="/images/openIcon.svg" class="actionImg">
             
           
-          </div>
-          <img class="deleteButton" id="deleteTitle${filterXSS(element.tabinfo.title)}" src="/images/delete.svg">
+          </button>
+          <button class="deleteButt" id="deleteTitle${filterXSS(element.tabinfo.title)}"><img class="deleteButton"  src="/images/delete.svg"></button>
         </div>
           <ul class="tabList">
           `;

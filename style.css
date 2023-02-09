@@ -105,8 +105,44 @@ html{
   height: 160px;
   text-align: center;
 }
+
+
+/* got from https://css-tricks.com/overriding-default-button-styles/ */
+button.groupName{
+  display: inline-block;
+  border: none;
+  /* padding: 1rem 2rem; */
+  margin: 0;
+  text-decoration: none;
+  background: #0069ed;
+  color: #ffffff;
+  font-family: sans-serif;
+  font-size: 1rem;
+  cursor: pointer;
+  text-align: center;
+  transition: background 250ms ease-in-out, 
+              transform 150ms ease;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+button:hover.groupName,
+button:focus.groupName{
+  background: #0053ba;
+}
+
+button:focus.groupName{
+  outline: 1px solid #fff;
+  outline-offset: -4px;
+}
+
+button:active.groupName{
+  transform: scale(0.99);
+}
+
 .groupName {
-  
+
+  /* code to make it look right */
     width: 90px;
     height:90px;
     text-align: center;
@@ -130,7 +166,11 @@ html{
   transform: translate(-50%, -50%);
   transition: width, 0.2s linear;
 }
-.tabGroup:hover .tabList{
+.tabGroup .tabList{
+  visibility: hidden;
+}
+.tabGroup:hover .tabList, .tabGroup:focus .tabList, .tabGroup:focus-within .tabList  {
+  visibility: visible;
   height: 100px;
   transition: height, 0.2s linear;
 }
@@ -170,16 +210,33 @@ html{
   margin-bottom: .25em;
   align-items: center;
 }
+
+.innerButtonText {
+  position: absolute;
+  top: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
 img.deleteButton {
   width: 16px;
+  /* background: rgb(141 233 233);
+  padding: 4px;
+  border-radius: 4px;
+  position: absolute;
+  top: 3px;
+  left: 133px; */
+  /* transform: translate(-50%, -50%); */
+}
+button.deleteButt{
   background: rgb(141 233 233);
   padding: 4px;
   border-radius: 4px;
   position: absolute;
   top: 3px;
   left: 133px;
-  /* transform: translate(-50%, -50%); */
 }
+
 .deleteContainer {
   position: relative;
   /* align-items: center; */
@@ -201,6 +258,11 @@ img.deleteButton {
   display: flex;
   padding: 1em;
   border-radius: 15px;
+  flex: 1;
+}
+
+#newGroups .tabGroup .tabList {
+  visibility: visible;
 }
 
 #newGroups .tabGroup:hover {
@@ -211,6 +273,8 @@ img.deleteButton {
 #newGroups .tabList {
   height: 90px;
   margin-left: 1em;
+  flex: 1;
+  max-width: 430px;
 }
 
 .newGroupsContainer {
@@ -266,5 +330,6 @@ img.hoverImage {
 #newGroups .tabList {
 
   width: 100%;
+  max-width: unset;
 }
 }
