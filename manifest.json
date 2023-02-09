@@ -16,6 +16,7 @@
     "default_popup": "index.html"
   },
   "icons": {
-    "128": "images/icon128.png"
+    "48": "images/logo48.png",
+    "128": "images/logo.png"
   }
 }

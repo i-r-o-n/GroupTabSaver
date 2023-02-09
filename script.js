@@ -59,7 +59,7 @@ function search(query){
 function setUpSearchBar() {
   const submitButton = document.getElementById('searchButton');
   const searchBox = document.getElementById('searchBox');
-  submitButton.addEventListener('keydown', function onEvent(event) {
+  searchBox.addEventListener('keydown', function onEvent(event) {
       if (event.key === "Enter") {
         search(searchBox.value)
       }
