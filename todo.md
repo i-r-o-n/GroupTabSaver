@@ -8,8 +8,6 @@ make search more custimizable
 
 Fix .releitive-ells to have dynamic height and scroll bar
 
-Save Tab group Colors
-
 Option to save position
 
 Option to make custom ones
