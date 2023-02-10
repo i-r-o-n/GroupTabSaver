@@ -218,7 +218,7 @@ function getTabsFromStorage() {
             
           
           </button>
-          <button class="deleteButt" id="deleteTitle${filterXSS(element.tabinfo.title)}"><img class="deleteButton"  src="/images/delete.svg"></button>
+          <button class="deleteButt" id="deleteTitle${filterXSS(element.tabinfo.title)}"><img class="deleteButton" src="/images/ellipsis-solid.svg"></button>
         </div>
           <ul class="tabList">
           `;

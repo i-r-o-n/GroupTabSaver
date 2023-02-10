@@ -133,7 +133,7 @@ button:focus.groupName{
 
 button:focus.groupName{
   outline: 1px solid #fff;
-  outline-offset: -4px;
+  /* outline-offset: -4px; */
 }
 
 button:active.groupName{
@@ -218,8 +218,13 @@ button:active.groupName{
   transform: translateX(-50%);
 }
 
+
+
+button:active.deleteButton{
+  transform: scale(0.99);
+}
 img.deleteButton {
-  width: 16px;
+  /* width: 16px; */
   /* background: rgb(141 233 233);
   padding: 4px;
   border-radius: 4px;
@@ -228,13 +233,30 @@ img.deleteButton {
   left: 133px; */
   /* transform: translate(-50%, -50%); */
 }
-button.deleteButt{
+button.deleteButt {
   background: rgb(141 233 233);
   padding: 4px;
   border-radius: 4px;
   position: absolute;
   top: 3px;
-  left: 133px;
+  left: 129px;
+  width: 30px;
+  padding-top: 0;
+  border: none;
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s, opacity 0.2s ease-out;
+}
+button.deleteButt:hover {
+  scale: 1.1;
+  transition: transform 150ms ease;
+}
+
+.tabGroup:hover .deleteButt, .tabGroup:focus .deleteButt, .tabGroup:focus-within .deleteButt  {
+  visibility: visible;
+  opacity: 1;
+  /* height: 100px; */
+  /* transition: height, 0.2s linear; */
 }
 
 .deleteContainer {
