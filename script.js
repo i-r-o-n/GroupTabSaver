@@ -125,17 +125,27 @@ async function deleteFromLocalStorage(title) {
 
 // Adds or updates a tab group in the Global var and in the chrome sync storage
 function addGroupToStorage(element) {
+  if(element.tabinfo == undefined){
+    console.log("why would the addGroupToStorage el be undefinged")
+    console.log(element)
+    return
+  }
   let tempEl = element
   // check if it's new or updating
+  // Then if its updating set a loading time to catch other quick changes.
   if(savedGroups[element.tabinfo.title] != undefined){
+    
     tempEl.tabinfo.live = savedGroups[element.tabinfo.title].tabinfo.live
   }
-  
-  savedGroups[element.tabinfo.title] = tempEl
+
+    
+  savedGroups[element.tabinfo.title] = element
   // console.log(savedGroups)
   getTabsFromStorage()
   updateLocalStorage(tempEl);
   getTabs()
+
+
 }
 
 // Deletes a group in the Global var and in the chrome sync storage
@@ -333,6 +343,20 @@ function getTabsFromStorage(live = false) {
   }
 }
 
+function liveTabsUpdate() {
+  for (var key in savedGroups) {
+  
+    if (savedGroups.hasOwnProperty(key) && savedGroups[key].tabinfo.live) {
+
+      clearTimeout(savedGroups[key].tabinfo.updateTimeout);
+      savedGroups[key].tabinfo.updateTimeout = setTimeout(() =>{
+        getTabsFromStorage(true);
+      }, 500);
+    }
+  }
+
+}
+
 class Listeners {
   static init() {
     chrome.tabGroups.onUpdated.addListener(Listeners.onGroupUpdated);
@@ -341,12 +365,14 @@ class Listeners {
     )
   };
 
+  
+
   static async onGroupUpdated() {
     // communicate group 
     console.log("a tab group was updated!")
     exampleData = await tabEditor.Reader.getCurrentTabData();
     getTabs();
-    getTabsFromStorage(true);
+    liveTabsUpdate()
     // getTabsFromStorage();
   };
 }
@@ -365,6 +391,7 @@ async function init(){
 
   getTabs();
   getTabsFromStorage();
+  getTabsFromStorage(true);
 
   Listeners.init();
 

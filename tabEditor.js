@@ -127,11 +127,12 @@ export class Creator {
   static async createGroupFromURLs2(urlList, tabinfo) {
     let title = tabinfo.title
     let groupsTemp = (await Reader.getGroups())
+    
     let currentGroups = groupsTemp.map(group => group.title);
     let currentGroupIds = groupsTemp.map(group => group.id);
     console.log([title,currentGroups,title in currentGroups])
-    if(currentGroups.includes(title)){
-      let groupId = currentGroupIds[currentGroups.indexOf(title)]
+    if(currentGroups.includes(filterXSS(title.replace(/_/g, " ")) )){
+      let groupId = currentGroupIds[currentGroups.indexOf(filterXSS(title.replace(/_/g, " ")) )]
       console.log("asdfasdfasdfasdfasdffas")
       if(!confirm(`Reset tab group ${title}?`)){
         return
