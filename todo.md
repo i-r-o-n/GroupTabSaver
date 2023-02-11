@@ -1,4 +1,3 @@
-add settings for each saved group
 
 add overall settings 
 
@@ -16,13 +15,17 @@ Option to save individual tabs
 
 Fix scrorll bar and transiston witdth.
 
-Make Options focusable
 
-Make Live tab option
 
 add more background image
 
 
+Make Options focusable Done
+
+
+Make Live tab option Done
+
+add settings for each saved group Done
 
 Use Defult Search DONE
 

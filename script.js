@@ -120,7 +120,11 @@ async function deleteFromLocalStorage(title) {
 
 function addGroupToStorage(element) {
   let tempEl = element
-  tempEl.tabinfo.live = savedGroups[element.tabinfo.title].tabinfo.live
+  // check if it's new or updating
+  if(savedGroups[element.tabinfo.title] != undefined){
+    tempEl.tabinfo.live = savedGroups[element.tabinfo.title].tabinfo.live
+  }
+  
   
 
   savedGroups[element.tabinfo.title] = tempEl
@@ -156,9 +160,14 @@ function getTabs() {
     if(filterXSS(element.tabinfo.title) == "" ){
       return
     }
-    if(savedGroups[element.tabinfo.title].tabinfo.live == true ){
-      return
+    if(savedGroups[element.tabinfo.title] != undefined){
+      if(savedGroups[element.tabinfo.title].tabinfo.live == true ){
+        return
+      }
     }
+      
+   
+    
     
 
       console.log(element)
