@@ -1,4 +1,3 @@
-
 add overall settings
     
     Add reset button
@@ -18,6 +17,8 @@ Option to make custom ones
 Option to save individual tabs
 
 Fix scrorll bar and transiston witdth.
+
+fix live tabs closing on close group
 
 
 

@@ -3,6 +3,10 @@
 const NoGroup = chrome.tabGroups.TAB_GROUP_ID_NONE;
 // search in the the current window
 const QueryInWindow = {windowId: chrome.windows.WINDOW_ID_CURRENT};
+function filterXSS(text) {
+  // return text
+  return DOMPurify.sanitize(text, { USE_PROFILES: {} })
+}
 
 
 // function parseTabTrunk(tab) {};
@@ -155,7 +159,7 @@ export class Creator {
           function(groupId) {
             // console.log(["groupId",groupId])
             currentGroupId = groupId; 
-            chrome.tabGroups.update(groupId = currentGroupId, {color:tabinfo.color, title: title})
+            chrome.tabGroups.update(groupId = currentGroupId, {color:tabinfo.color, title:filterXSS(title.replace(/_/g, " ")) })
 
             // there as got be a way to await this but for now it stays in the call back
             urlList.slice(1).map(
