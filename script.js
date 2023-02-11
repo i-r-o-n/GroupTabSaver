@@ -182,7 +182,7 @@ function getTabs() {
       groupHtml += `</ul>`;
       newGroup.innerHTML = groupHtml;
       newGroupsEl.appendChild(newGroup);
-      console.log(document.getElementById(`groupNameNew${element.tabinfo.title}`))
+      // console.log(document.getElementById(`groupNameNew${element.tabinfo.title}`))
       console.log(filterXSS(element.tabinfo.title))
       let groupTouchTarget = document.getElementById(`groupNameNew${filterXSS(element.tabinfo.title)}`)
       groupTouchTarget.addEventListener("click", () => {
@@ -213,6 +213,7 @@ function getTabsFromStorage() {
       console.table(element)
       const newGroup = document.createElement("div");
       newGroup.classList.add("tabGroup");
+      // newGroup.id = `newGroup${filterXSS(element.tabinfo.title)}`
       // newGroup.tabIndex = 0;
       // newGroup.onclick = function() { addGroupToStorage(element); };
   
@@ -229,6 +230,9 @@ function getTabsFromStorage() {
             <div class="groupContextMenu" id="groupContextMenu${filterXSS(element.tabinfo.title)}" >
               <button class="deleteButtonReal" id="deleteButtonReal${filterXSS(element.tabinfo.title)}">
                 Delete ${filterXSS(element.tabinfo.title.replace(/_/g, " "))}
+              </button>
+              <button class="liveButton" id="liveButton${filterXSS(element.tabinfo.title)}">
+                Switch to ${element.tabinfo.live == true? "static":"live"} group
               </button>
             </div>
           <div>
@@ -267,12 +271,16 @@ function getTabsFromStorage() {
         
       });
 
+      document.getElementById(`liveButton${filterXSS(element.tabinfo.title)}`).addEventListener("click", () => {
+        element.tabinfo.live = element.tabinfo.live == true ? false:true
+        document.getElementById(`liveButton${filterXSS(element.tabinfo.title)}`).innerText = `Switch to ${element.tabinfo.live == true? "static":"live"} group`
+        getLiveTabs();
+      });
+
       document.getElementById(`deleteButtonReal${filterXSS(element.tabinfo.title)}`).addEventListener("click", () => {
         deleteGroup(element.tabinfo.title)
         
       });
-
-      // 
 
       let groupTouchTarget = document.getElementById(`groupName${filterXSS(element.tabinfo.title)}`)
       groupTouchTarget.addEventListener("click", () => {
@@ -282,6 +290,101 @@ function getTabsFromStorage() {
       });
 
       groupTouchTarget.style.backgroundColor = colorsKey[element.tabinfo.color]
+    }
+  }
+}
+
+function getLiveTabsasdf() {
+  console.log(savedGroups)
+  for (var key in savedGroups) {
+    
+    if (savedGroups.hasOwnProperty(key) && savedGroups[key].tabinfo.live) {
+      console.log(exampleData.find(el => el.tabinfo.title == savedGroups[key].tabinfo.title))
+      addGroupToStorage(exampleData.find(el => el.tabinfo.title == savedGroups[key].tabinfo.title))
+      let element = savedGroups[key]
+      // console.table(element)
+      
+      // const newGroup = document.createElement("div");
+      // newGroup.classList.add("tabGroup");
+      // newGroup.id = `newGroup${filterXSS(element.tabinfo.title)}`
+      // newGroup.tabIndex = 0;
+      // newGroup.onclick = function() { addGroupToStorage(element); };
+  
+      let groupHtml = `
+      <div class="deleteContainer" id="deleteContainer${filterXSS(element.tabinfo.title)}">
+          <button tabindex="0" class="groupName" id=groupName${filterXSS(element.tabinfo.title)}>
+            <span class="innerButtonText" >${filterXSS(element.tabinfo.title.replace(/_/g, " "))}</span>
+            <img src="/images/openIcon.svg" class="actionImg">
+            
+          
+          </button>
+          <button class="deleteButt" id="deleteTitle${filterXSS(element.tabinfo.title)}">
+            <img class="deleteButton" src="/images/ellipsis-solid.svg"></button>
+            <div class="groupContextMenu" id="groupContextMenu${filterXSS(element.tabinfo.title)}" >
+              <button class="deleteButtonReal" id="deleteButtonReal${filterXSS(element.tabinfo.title)}">
+                Delete ${filterXSS(element.tabinfo.title.replace(/_/g, " "))}
+              </button>
+              <button class="liveButton" id="liveButton${filterXSS(element.tabinfo.title)}">
+                Switch to ${element.tabinfo.live == true? "static":"live"} group
+              </button>
+            </div>
+          <div>
+        </div>
+          <ul class="tabList">
+          `;
+
+
+      for (const tab of element.tabs) {
+        groupHtml += `<li>
+          <img src="${tab.favIconUrl}">
+          <a href="${tab.url}">${filterXSS(tab.title)}</a>
+        </li>`;
+      }
+      
+      groupHtml += `</ul>`;
+      document.getElementById(`newGroup${filterXSS(element.tabinfo.title)}`).innerHTML = groupHtml;
+      
+      // tabGroupsEl.appendChild(newGroup);
+      document.getElementById(`deleteTitle${filterXSS(element.tabinfo.title)}`).addEventListener("click", () => {
+        const contextMenue = document.getElementById(`groupContextMenu${filterXSS(element.tabinfo.title)}`)
+        contextMenue.style.display = "block"
+
+        const outsideClickListener = event => {
+          console.log(event.target)
+          if (event.target.closest(`#deleteContainer${filterXSS(element.tabinfo.title)}`) === null) { // or use: event.target.closest(selector) === null
+            contextMenue.style.display = 'none';
+            removeClickListener();
+          }
+        }
+      
+        const removeClickListener = () => {
+          document.removeEventListener('click', outsideClickListener);
+        }
+      
+        document.addEventListener('click', outsideClickListener);
+        
+      });
+
+      document.getElementById(`liveButton${filterXSS(element.tabinfo.title)}`).addEventListener("click", () => {
+        element.tabinfo.live = element.tabinfo.live == true ? false:true
+        document.getElementById(`liveButton${filterXSS(element.tabinfo.title)}`).innerText = `Switch to ${element.tabinfo.live == true? "static":"live"} group`
+        getLiveTabs();
+      });
+
+      document.getElementById(`deleteButtonReal${filterXSS(element.tabinfo.title)}`).addEventListener("click", () => {
+        deleteGroup(element.tabinfo.title)
+        
+      });
+
+      let groupTouchTarget = document.getElementById(`groupName${filterXSS(element.tabinfo.title)}`)
+      groupTouchTarget.addEventListener("click", () => {
+        tabEditor.Creator.createGroupFromURLs2(
+            element.tabs.map(tab => tab.url), element.tabinfo);
+        // deleteGroup(element.tabinfo.title)
+      });
+
+      groupTouchTarget.style.backgroundColor = colorsKey[element.tabinfo.color]
+      
     }
   }
 }
@@ -300,6 +403,7 @@ class Listeners {
     console.log("a tab group was updated!")
     exampleData = await tabEditor.Reader.getCurrentTabData();
     getTabs();
+    getLiveTabs();
     // getTabsFromStorage();
   };
 }
