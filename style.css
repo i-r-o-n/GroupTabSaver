@@ -369,6 +369,23 @@ img.hoverImage {
   background-color: black;
 }
 
+.liveButton {
+  border: 2px solid #505050;
+  border-right: 0;
+  border-left: 0;
+  border-top: 0;
+  background: none;
+  background: none;
+  color: white;
+  width: 100%;
+  padding: 3px;
+}
+
+.liveButton:hover {
+  background-color: black;
+}
+
+
 @media screen and (max-width: 750px) {
   #newGroups .tabGroup {
 

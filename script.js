@@ -119,12 +119,14 @@ async function deleteFromLocalStorage(title) {
 
 
 function addGroupToStorage(element) {
+  let tempEl = element
+  tempEl.tabinfo.live = savedGroups[element.tabinfo.title].tabinfo.live
   
 
-  savedGroups[element.tabinfo.title] = element
+  savedGroups[element.tabinfo.title] = tempEl
   console.log(savedGroups)
   getTabsFromStorage()
-  updateLocalStorage(element);
+  updateLocalStorage(tempEl);
   getTabs()
 }
 
@@ -154,6 +156,10 @@ function getTabs() {
     if(filterXSS(element.tabinfo.title) == "" ){
       return
     }
+    if(savedGroups[element.tabinfo.title].tabinfo.live == true ){
+      return
+    }
+    
 
       console.log(element)
       const newGroup = document.createElement("div");
@@ -182,7 +188,7 @@ function getTabs() {
       groupHtml += `</ul>`;
       newGroup.innerHTML = groupHtml;
       newGroupsEl.appendChild(newGroup);
-      console.log(document.getElementById(`groupNameNew${element.tabinfo.title}`))
+      // console.log(document.getElementById(`groupNameNew${element.tabinfo.title}`))
       console.log(filterXSS(element.tabinfo.title))
       let groupTouchTarget = document.getElementById(`groupNameNew${filterXSS(element.tabinfo.title)}`)
       groupTouchTarget.addEventListener("click", () => {
@@ -201,18 +207,36 @@ const isVisible = elem => !!elem && !!( elem.offsetWidth || elem.offsetHeight ||
 
 
 const tabGroupsEl = document.getElementById('tabGroups');
-function getTabsFromStorage() {
+function getTabsFromStorage(live = false) {
+  
   //imploment getting from extention
-  tabGroupsEl.innerHTML="";
+  if(!live){
+    tabGroupsEl.innerHTML="";
+  }
+  
   console.log(savedGroups)
   for (var key in savedGroups) {
     
     if (savedGroups.hasOwnProperty(key)) {
       let element = savedGroups[key]
+      if(live) {
+        let newTabData = exampleData.find(el => {return el.tabinfo.title == key})
+        // console.log(newTabData)
+        // console.log(savedGroups[key].tabinfo.live)
+        if(savedGroups[key].tabinfo.live && newTabData != undefined){
+          addGroupToStorage(newTabData)
+          element = savedGroups[key]
+        }else{
+          continue;
+        }
+        
+      }
+      
 
       console.table(element)
       const newGroup = document.createElement("div");
       newGroup.classList.add("tabGroup");
+      newGroup.id = `newGroup${filterXSS(element.tabinfo.title)}`
       // newGroup.tabIndex = 0;
       // newGroup.onclick = function() { addGroupToStorage(element); };
   
@@ -230,6 +254,9 @@ function getTabsFromStorage() {
               <button class="deleteButtonReal" id="deleteButtonReal${filterXSS(element.tabinfo.title)}">
                 Delete ${filterXSS(element.tabinfo.title.replace(/_/g, " "))}
               </button>
+              <button class="liveButton" id="liveButton${filterXSS(element.tabinfo.title)}">
+                Switch to ${element.tabinfo.live == true? "static":"live"} group
+              </button>
             </div>
           <div>
         </div>
@@ -245,8 +272,15 @@ function getTabsFromStorage() {
       }
       
       groupHtml += `</ul>`;
-      newGroup.innerHTML = groupHtml;
-      tabGroupsEl.appendChild(newGroup);
+
+      if(live){
+        document.getElementById(`newGroup${filterXSS(element.tabinfo.title)}`).innerHTML = groupHtml;
+      }else{
+        newGroup.innerHTML = groupHtml;
+        tabGroupsEl.appendChild(newGroup);
+      }
+      
+      
       document.getElementById(`deleteTitle${filterXSS(element.tabinfo.title)}`).addEventListener("click", () => {
         const contextMenue = document.getElementById(`groupContextMenu${filterXSS(element.tabinfo.title)}`)
         contextMenue.style.display = "block"
@@ -267,12 +301,27 @@ function getTabsFromStorage() {
         
       });
 
+      document.getElementById(`liveButton${filterXSS(element.tabinfo.title)}`).addEventListener("click", () => {
+
+
+        element.tabinfo.live = element.tabinfo.live == true ? false:true
+        console.log(savedGroups[element.tabinfo.title].tabinfo.live)
+        savedGroups[element.tabinfo.title].tabinfo.live = element.tabinfo.live
+        console.log(savedGroups[element.tabinfo.title].tabinfo.live)
+
+        if(savedGroups[element.tabinfo.title].tabinfo.live == false){
+          addGroupToStorage(savedGroups[element.tabinfo.title])
+        }
+        // addGroupToStorage(newTabData)
+
+        document.getElementById(`liveButton${filterXSS(element.tabinfo.title)}`).innerText = `Switch to ${element.tabinfo.live == true? "static":"live"} group`
+        getTabsFromStorage(true);
+      });
+
       document.getElementById(`deleteButtonReal${filterXSS(element.tabinfo.title)}`).addEventListener("click", () => {
         deleteGroup(element.tabinfo.title)
         
       });
-
-      // 
 
       let groupTouchTarget = document.getElementById(`groupName${filterXSS(element.tabinfo.title)}`)
       groupTouchTarget.addEventListener("click", () => {
@@ -282,6 +331,114 @@ function getTabsFromStorage() {
       });
 
       groupTouchTarget.style.backgroundColor = colorsKey[element.tabinfo.color]
+    }
+  }
+}
+
+function getLiveTabs() {
+  // console.log(savedGroups)
+  for (var key in savedGroups) {
+    
+    // console.log(exampleData)
+    let newTabData = exampleData.find(el => {
+      // console.table({"el":el.tabinfo.title,"key":key,"res":el.tabinfo.title == key})
+      
+      return el.tabinfo.title == key
+      
+    })
+    // console.log(newTabData)
+    if (savedGroups.hasOwnProperty(key) && savedGroups[key].tabinfo.live && newTabData != undefined) {
+      // console.table(savedGroups[key].tabinfo.title)
+      // console.log(newTabData)
+      addGroupToStorage(newTabData)
+      let element = savedGroups[key]
+      // console.table(element)
+      
+      // const newGroup = document.createElement("div");
+      // newGroup.classList.add("tabGroup");
+      // newGroup.id = `newGroup${filterXSS(element.tabinfo.title)}`
+      // newGroup.tabIndex = 0;
+      // newGroup.onclick = function() { addGroupToStorage(element); };
+  
+      let groupHtml = `
+      <div class="deleteContainer" id="deleteContainer${filterXSS(element.tabinfo.title)}">
+          <button tabindex="0" class="groupName" id=groupName${filterXSS(element.tabinfo.title)}>
+            <span class="innerButtonText" >${filterXSS(element.tabinfo.title.replace(/_/g, " "))}</span>
+            <img src="/images/openIcon.svg" class="actionImg">
+            
+          
+          </button>
+          <button class="deleteButt" id="deleteTitle${filterXSS(element.tabinfo.title)}">
+            <img class="deleteButton" src="/images/ellipsis-solid.svg"></button>
+            <div class="groupContextMenu" id="groupContextMenu${filterXSS(element.tabinfo.title)}" >
+              <button class="deleteButtonReal" id="deleteButtonReal${filterXSS(element.tabinfo.title)}">
+                Delete ${filterXSS(element.tabinfo.title.replace(/_/g, " "))}
+              </button>
+              <button class="liveButton" id="liveButton${filterXSS(element.tabinfo.title)}">
+                Switch to ${element.tabinfo.live == true? "static":"live"} group
+              </button>
+            </div>
+          <div>
+        </div>
+          <ul class="tabList">
+          `;
+
+
+      for (const tab of element.tabs) {
+        groupHtml += `<li>
+          <img src="${tab.favIconUrl}">
+          <a href="${tab.url}">${filterXSS(tab.title)}</a>
+        </li>`;
+      }
+      
+      groupHtml += `</ul>`;
+      document.getElementById(`newGroup${filterXSS(element.tabinfo.title)}`).innerHTML = groupHtml;
+      
+      // tabGroupsEl.appendChild(newGroup);
+      document.getElementById(`deleteTitle${filterXSS(element.tabinfo.title)}`).addEventListener("click", () => {
+        const contextMenue = document.getElementById(`groupContextMenu${filterXSS(element.tabinfo.title)}`)
+        contextMenue.style.display = "block"
+
+        const outsideClickListener = event => {
+          console.log(event.target)
+          if (event.target.closest(`#deleteContainer${filterXSS(element.tabinfo.title)}`) === null) { // or use: event.target.closest(selector) === null
+            contextMenue.style.display = 'none';
+            removeClickListener();
+          }
+        }
+      
+        const removeClickListener = () => {
+          document.removeEventListener('click', outsideClickListener);
+        }
+      
+        document.addEventListener('click', outsideClickListener);
+        
+      });
+
+      document.getElementById(`liveButton${filterXSS(element.tabinfo.title)}`).addEventListener("click", () => {
+        element.tabinfo.live = element.tabinfo.live == true ? false:true
+        console.log(savedGroups[element.tabinfo.title].tabinfo.live)
+        savedGroups[element.tabinfo.title].tabinfo.live = element.tabinfo.live
+        console.log(savedGroups[element.tabinfo.title].tabinfo.live)
+
+        document.getElementById(`liveButton${filterXSS(element.tabinfo.title)}`).innerText = `Switch to ${element.tabinfo.live == true? "static":"live"} group`
+        getTabsFromStorage(true);
+      });
+
+      document.getElementById(`deleteButtonReal${filterXSS(element.tabinfo.title)}`).addEventListener("click", () => {
+        deleteGroup(element.tabinfo.title)
+        
+      });
+
+      let groupTouchTarget = document.getElementById(`groupName${filterXSS(element.tabinfo.title)}`)
+      groupTouchTarget.addEventListener("click", () => {
+        tabEditor.Creator.createGroupFromURLs2(
+            element.tabs.map(tab => tab.url), element.tabinfo);
+        // deleteGroup(element.tabinfo.title)
+      });
+
+      groupTouchTarget.style.backgroundColor = colorsKey[element.tabinfo.color]
+      
     }
   }
 }
@@ -300,6 +457,7 @@ class Listeners {
     console.log("a tab group was updated!")
     exampleData = await tabEditor.Reader.getCurrentTabData();
     getTabs();
+    getTabsFromStorage(true);
     // getTabsFromStorage();
   };
 }
