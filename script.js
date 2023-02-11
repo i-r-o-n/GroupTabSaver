@@ -453,6 +453,8 @@ function getLiveTabs() {
 }
 
 
+
+
 class Listeners {
   static init() {
     chrome.tabGroups.onUpdated.addListener(Listeners.onGroupUpdated);
@@ -491,6 +493,17 @@ async function init(){
   document.getElementsByClassName("relitiveEls")[0].style.visibility = "visible";
   document.getElementsByClassName("relitiveEls")[0].style.opacity = 1;
 
+  //updates the tabs when the user goes back to the tab
+  document.addEventListener("visibilitychange", async () => {
+    
+    if (!document.hidden) {
+      console.log(document.hidden)
+      await loadDataFromStorageSync()
+      exampleData = await tabEditor.Reader.getCurrentTabData();
+      getTabs();
+      getTabsFromStorage();
+    }
+  });
   // return exampleData
 }
 
