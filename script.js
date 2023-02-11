@@ -119,12 +119,14 @@ async function deleteFromLocalStorage(title) {
 
 
 function addGroupToStorage(element) {
+  let tempEl = element
+  tempEl.tabinfo.live = savedGroups[element.tabinfo.title].tabinfo.live
   
 
-  savedGroups[element.tabinfo.title] = element
+  savedGroups[element.tabinfo.title] = tempEl
   console.log(savedGroups)
   getTabsFromStorage()
-  updateLocalStorage(element);
+  updateLocalStorage(tempEl);
   getTabs()
 }
 
@@ -154,6 +156,10 @@ function getTabs() {
     if(filterXSS(element.tabinfo.title) == "" ){
       return
     }
+    if(savedGroups[element.tabinfo.title].tabinfo.live == true ){
+      return
+    }
+    
 
       console.log(element)
       const newGroup = document.createElement("div");
@@ -201,19 +207,36 @@ const isVisible = elem => !!elem && !!( elem.offsetWidth || elem.offsetHeight ||
 
 
 const tabGroupsEl = document.getElementById('tabGroups');
-function getTabsFromStorage() {
+function getTabsFromStorage(live = false) {
+  
   //imploment getting from extention
-  tabGroupsEl.innerHTML="";
+  if(!live){
+    tabGroupsEl.innerHTML="";
+  }
+  
   console.log(savedGroups)
   for (var key in savedGroups) {
     
     if (savedGroups.hasOwnProperty(key)) {
       let element = savedGroups[key]
+      if(live) {
+        let newTabData = exampleData.find(el => {return el.tabinfo.title == key})
+        // console.log(newTabData)
+        // console.log(savedGroups[key].tabinfo.live)
+        if(savedGroups[key].tabinfo.live && newTabData != undefined){
+          addGroupToStorage(newTabData)
+          element = savedGroups[key]
+        }else{
+          continue;
+        }
+        
+      }
+      
 
       console.table(element)
       const newGroup = document.createElement("div");
       newGroup.classList.add("tabGroup");
-      // newGroup.id = `newGroup${filterXSS(element.tabinfo.title)}`
+      newGroup.id = `newGroup${filterXSS(element.tabinfo.title)}`
       // newGroup.tabIndex = 0;
       // newGroup.onclick = function() { addGroupToStorage(element); };
   
@@ -249,8 +272,15 @@ function getTabsFromStorage() {
       }
       
       groupHtml += `</ul>`;
-      newGroup.innerHTML = groupHtml;
-      tabGroupsEl.appendChild(newGroup);
+
+      if(live){
+        document.getElementById(`newGroup${filterXSS(element.tabinfo.title)}`).innerHTML = groupHtml;
+      }else{
+        newGroup.innerHTML = groupHtml;
+        tabGroupsEl.appendChild(newGroup);
+      }
+      
+      
       document.getElementById(`deleteTitle${filterXSS(element.tabinfo.title)}`).addEventListener("click", () => {
         const contextMenue = document.getElementById(`groupContextMenu${filterXSS(element.tabinfo.title)}`)
         contextMenue.style.display = "block"
@@ -272,9 +302,20 @@ function getTabsFromStorage() {
       });
 
       document.getElementById(`liveButton${filterXSS(element.tabinfo.title)}`).addEventListener("click", () => {
+
+
         element.tabinfo.live = element.tabinfo.live == true ? false:true
+        console.log(savedGroups[element.tabinfo.title].tabinfo.live)
+        savedGroups[element.tabinfo.title].tabinfo.live = element.tabinfo.live
+        console.log(savedGroups[element.tabinfo.title].tabinfo.live)
+
+        if(savedGroups[element.tabinfo.title].tabinfo.live == false){
+          addGroupToStorage(savedGroups[element.tabinfo.title])
+        }
+        // addGroupToStorage(newTabData)
+
         document.getElementById(`liveButton${filterXSS(element.tabinfo.title)}`).innerText = `Switch to ${element.tabinfo.live == true? "static":"live"} group`
-        getLiveTabs();
+        getTabsFromStorage(true);
       });
 
       document.getElementById(`deleteButtonReal${filterXSS(element.tabinfo.title)}`).addEventListener("click", () => {
@@ -294,13 +335,22 @@ function getTabsFromStorage() {
   }
 }
 
-function getLiveTabsasdf() {
-  console.log(savedGroups)
+function getLiveTabs() {
+  // console.log(savedGroups)
   for (var key in savedGroups) {
     
-    if (savedGroups.hasOwnProperty(key) && savedGroups[key].tabinfo.live) {
-      console.log(exampleData.find(el => el.tabinfo.title == savedGroups[key].tabinfo.title))
-      addGroupToStorage(exampleData.find(el => el.tabinfo.title == savedGroups[key].tabinfo.title))
+    // console.log(exampleData)
+    let newTabData = exampleData.find(el => {
+      // console.table({"el":el.tabinfo.title,"key":key,"res":el.tabinfo.title == key})
+      
+      return el.tabinfo.title == key
+      
+    })
+    // console.log(newTabData)
+    if (savedGroups.hasOwnProperty(key) && savedGroups[key].tabinfo.live && newTabData != undefined) {
+      // console.table(savedGroups[key].tabinfo.title)
+      // console.log(newTabData)
+      addGroupToStorage(newTabData)
       let element = savedGroups[key]
       // console.table(element)
       
@@ -367,8 +417,12 @@ function getLiveTabsasdf() {
 
       document.getElementById(`liveButton${filterXSS(element.tabinfo.title)}`).addEventListener("click", () => {
         element.tabinfo.live = element.tabinfo.live == true ? false:true
+        console.log(savedGroups[element.tabinfo.title].tabinfo.live)
+        savedGroups[element.tabinfo.title].tabinfo.live = element.tabinfo.live
+        console.log(savedGroups[element.tabinfo.title].tabinfo.live)
+
         document.getElementById(`liveButton${filterXSS(element.tabinfo.title)}`).innerText = `Switch to ${element.tabinfo.live == true? "static":"live"} group`
-        getLiveTabs();
+        getTabsFromStorage(true);
       });
 
       document.getElementById(`deleteButtonReal${filterXSS(element.tabinfo.title)}`).addEventListener("click", () => {
@@ -403,7 +457,7 @@ class Listeners {
     console.log("a tab group was updated!")
     exampleData = await tabEditor.Reader.getCurrentTabData();
     getTabs();
-    getLiveTabs();
+    getTabsFromStorage(true);
     // getTabsFromStorage();
   };
 }
