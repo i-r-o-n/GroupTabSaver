@@ -2,6 +2,8 @@ add overall settings
     
     Add reset button
 
+    Add turn off seccond hand
+
 Fix long tab group names
 
 make search more custimizable 
