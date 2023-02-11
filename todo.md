@@ -1,5 +1,9 @@
 
-add overall settings 
+add overall settings
+    
+    Add reset button
+
+Fix long tab group names
 
 make search more custimizable 
 
@@ -19,9 +23,7 @@ Fix scrorll bar and transiston witdth.
 
 add more background image
 
-
 Make Options focusable Done
-
 
 Make Live tab option Done
 
