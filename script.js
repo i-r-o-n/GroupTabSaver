@@ -193,6 +193,12 @@ function getTabs() {
   })
 }
 
+function hideOnClickOutside(element) {
+
+}
+
+const isVisible = elem => !!elem && !!( elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length ); // source (2018-03-11): https://github.com/jquery/jquery/blob/master/src/css/hiddenVisibleSelectors.js 
+
 
 const tabGroupsEl = document.getElementById('tabGroups');
 function getTabsFromStorage() {
@@ -211,14 +217,21 @@ function getTabsFromStorage() {
       // newGroup.onclick = function() { addGroupToStorage(element); };
   
       let groupHtml = `
-      <div class="deleteContainer">
+      <div class="deleteContainer" id="deleteContainer${filterXSS(element.tabinfo.title)}">
           <button tabindex="0" class="groupName" id=groupName${filterXSS(element.tabinfo.title)}>
             <span class="innerButtonText" >${filterXSS(element.tabinfo.title.replace(/_/g, " "))}</span>
             <img src="/images/openIcon.svg" class="actionImg">
             
           
           </button>
-          <button class="deleteButt" id="deleteTitle${filterXSS(element.tabinfo.title)}"><img class="deleteButton" src="/images/ellipsis-solid.svg"></button>
+          <button class="deleteButt" id="deleteTitle${filterXSS(element.tabinfo.title)}">
+            <img class="deleteButton" src="/images/ellipsis-solid.svg"></button>
+            <div class="groupContextMenu" id="groupContextMenu${filterXSS(element.tabinfo.title)}" >
+              <button class="deleteButtonReal" id="deleteButtonReal${filterXSS(element.tabinfo.title)}">
+                Delete ${filterXSS(element.tabinfo.title.replace(/_/g, " "))}
+              </button>
+            </div>
+          <div>
         </div>
           <ul class="tabList">
           `;
@@ -235,8 +248,31 @@ function getTabsFromStorage() {
       newGroup.innerHTML = groupHtml;
       tabGroupsEl.appendChild(newGroup);
       document.getElementById(`deleteTitle${filterXSS(element.tabinfo.title)}`).addEventListener("click", () => {
-        deleteGroup(element.tabinfo.title)
+        const contextMenue = document.getElementById(`groupContextMenu${filterXSS(element.tabinfo.title)}`)
+        contextMenue.style.display = "block"
+
+        const outsideClickListener = event => {
+          console.log(event.target)
+          if (event.target.closest(`#deleteContainer${filterXSS(element.tabinfo.title)}`) === null) { // or use: event.target.closest(selector) === null
+            contextMenue.style.display = 'none';
+            removeClickListener();
+          }
+        }
+      
+        const removeClickListener = () => {
+          document.removeEventListener('click', outsideClickListener);
+        }
+      
+        document.addEventListener('click', outsideClickListener);
+        
       });
+
+      document.getElementById(`deleteButtonReal${filterXSS(element.tabinfo.title)}`).addEventListener("click", () => {
+        deleteGroup(element.tabinfo.title)
+        
+      });
+
+      // 
 
       let groupTouchTarget = document.getElementById(`groupName${filterXSS(element.tabinfo.title)}`)
       groupTouchTarget.addEventListener("click", () => {
