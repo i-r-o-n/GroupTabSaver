@@ -130,6 +130,7 @@ function addGroupToStorage(element) {
     console.log(element)
     return
   }
+  
   let tempEl = element
   // check if it's new or updating
   // Then if its updating set a loading time to catch other quick changes.
@@ -137,9 +138,11 @@ function addGroupToStorage(element) {
     
     tempEl.tabinfo.live = savedGroups[element.tabinfo.title].tabinfo.live
   }
-
+  if(tempEl == savedGroups[element.tabinfo.title]){
+    return
+  }
     
-  savedGroups[element.tabinfo.title] = element
+  savedGroups[element.tabinfo.title] = tempEl
   // console.log(savedGroups)
   getTabsFromStorage()
   updateLocalStorage(tempEl);
@@ -347,11 +350,18 @@ function liveTabsUpdate() {
   for (var key in savedGroups) {
   
     if (savedGroups.hasOwnProperty(key) && savedGroups[key].tabinfo.live) {
+      // console.log("what groups are we looking at for live tabsUpdates")
+      // console.log(savedGroups[key])
+      // // checks to see if it was a changed and real group, probably innifficant.
 
-      clearTimeout(savedGroups[key].tabinfo.updateTimeout);
-      savedGroups[key].tabinfo.updateTimeout = setTimeout(() =>{
-        getTabsFromStorage(true);
-      }, 500);
+      if(exampleData.some(e => {
+        return (e.tabinfo.title == savedGroups[key].tabinfo.title) && (e != savedGroups[key])
+      } )){
+        clearTimeout(savedGroups[key].tabinfo.updateTimeout);
+        savedGroups[key].tabinfo.updateTimeout = setTimeout(() =>{
+          getTabsFromStorage(true);
+        }, 500);
+      }
     }
   }
 
@@ -371,6 +381,7 @@ class Listeners {
     // communicate group 
     console.log("a tab group was updated!")
     exampleData = await tabEditor.Reader.getCurrentTabData();
+    // console.log(exampleData)
     getTabs();
     liveTabsUpdate()
     // getTabsFromStorage();
