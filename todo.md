@@ -22,6 +22,8 @@ Fix scrorll bar and transiston witdth.
 
 fix live tabs closing on close group
 
+Switch to White text
+
 
 
 add more background image
