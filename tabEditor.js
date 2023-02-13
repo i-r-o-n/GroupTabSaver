@@ -18,7 +18,7 @@ export class Listeners {
 
   static onGroupUpdated() {
     // communicate group 
-    console.log("a tab group was updated!")
+    // console.log("a tab group was updated!")
   };
 }
 
@@ -61,7 +61,7 @@ export class Reader {
       }
       
     });
-    console.log(listToReturn)
+    // console.log(listToReturn)
     return listToReturn
   }
 }
@@ -130,19 +130,20 @@ export class Creator {
     
     let currentGroups = groupsTemp.map(group => group.title);
     let currentGroupIds = groupsTemp.map(group => group.id);
-    console.log([title,currentGroups,title in currentGroups])
+    // console.log([title,currentGroups,title in currentGroups])
     if(currentGroups.includes(filterXSS(title.replace(/_/g, " ")) )){
       let groupId = currentGroupIds[currentGroups.indexOf(filterXSS(title.replace(/_/g, " ")) )]
-      console.log("asdfasdfasdfasdfasdffas")
+      // console.log("asdfasdfasdfasdfasdffas")
       if(!confirm(`Reset tab group ${title}?`)){
         return
       }else{
-        console.log((await Reader.getTabs()).forEach(tab => {
+        // console.log()
+          (await Reader.getTabs()).forEach(tab => {
           if(tab.groupId == groupId){
-            console.log(tab)
+            // console.log(tab)
             chrome.tabs.remove(tab.id)
           }
-        }))
+        })
         
       }
     }

@@ -124,7 +124,7 @@ async function deleteFromLocalStorage(title) {
 }
 
 // Adds or updates a tab group in the Global var and in the chrome sync storage
-function addGroupToStorage(element) {
+function addGroupToStorage(element,liveSwitch=false) {
   if(element.tabinfo == undefined){
     console.log("why would the addGroupToStorage el be undefinged")
     console.log(element)
@@ -138,8 +138,10 @@ function addGroupToStorage(element) {
     
     tempEl.tabinfo.live = savedGroups[element.tabinfo.title].tabinfo.live
   }
-  if(tempEl == savedGroups[element.tabinfo.title]){
-    return
+  tempEl.tabinfo.live = savedGroups[element.tabinfo.title].tabinfo.live
+
+  if(tempEl == savedGroups[element.tabinfo.title] && !liveSwitch){
+    // return
   }
     
   savedGroups[element.tabinfo.title] = tempEl
@@ -147,7 +149,7 @@ function addGroupToStorage(element) {
   getTabsFromStorage()
   updateLocalStorage(tempEl);
   getTabs()
-
+  console.log(tempEl)
 
 }
 
@@ -238,7 +240,7 @@ function getTabsFromStorage(live = false) {
       let element = savedGroups[key]
       if(live) {
         let newTabData = exampleData.find(el => {return el.tabinfo.title == key})
-
+        newTabData.tabinfo.live == savedGroups[key].tabinfo.live
         if(savedGroups[key].tabinfo.live && newTabData != undefined){
           addGroupToStorage(newTabData)
           element = savedGroups[key]
@@ -318,15 +320,17 @@ function getTabsFromStorage(live = false) {
       document.getElementById(`liveButton${filterXSS(element.tabinfo.title)}`).addEventListener("click", () => {
 
         element.tabinfo.live = element.tabinfo.live == true ? false:true
+        console.log(element.tabinfo.live)
         savedGroups[element.tabinfo.title].tabinfo.live = element.tabinfo.live
 
-        if(savedGroups[element.tabinfo.title].tabinfo.live == false){
-          addGroupToStorage(savedGroups[element.tabinfo.title])
-        }
+        // if(savedGroups[element.tabinfo.title].tabinfo.live == false){
+          addGroupToStorage(savedGroups[element.tabinfo.title],true)
+        // }
         // addGroupToStorage(newTabData)
 
         document.getElementById(`liveButton${filterXSS(element.tabinfo.title)}`).innerText = `Switch to ${element.tabinfo.live == true? "static":"live"} group`
-        getTabsFromStorage(true);
+        getTabsFromStorage();
+        getTabs();
       });
 
       document.getElementById(`deleteButtonReal${filterXSS(element.tabinfo.title)}`).addEventListener("click", () => {
@@ -360,7 +364,7 @@ function liveTabsUpdate() {
         clearTimeout(savedGroups[key].tabinfo.updateTimeout);
         savedGroups[key].tabinfo.updateTimeout = setTimeout(() =>{
           getTabsFromStorage(true);
-        }, 500);
+        }, 1000);
       }
     }
   }
@@ -379,7 +383,7 @@ class Listeners {
 
   static async onGroupUpdated() {
     // communicate group 
-    console.log("a tab group was updated!")
+    // console.log("a tab group was updated!")
     exampleData = await tabEditor.Reader.getCurrentTabData();
     // console.log(exampleData)
     getTabs();
