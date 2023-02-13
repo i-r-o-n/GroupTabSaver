@@ -240,8 +240,9 @@ function getTabsFromStorage(live = false) {
       let element = savedGroups[key]
       if(live) {
         let newTabData = exampleData.find(el => {return el.tabinfo.title == key})
-        newTabData.tabinfo.live == savedGroups[key].tabinfo.live
+        
         if(savedGroups[key].tabinfo.live && newTabData != undefined){
+          newTabData.tabinfo.live == savedGroups[key].tabinfo.live
           addGroupToStorage(newTabData)
           element = savedGroups[key]
         }else{
