@@ -78,7 +78,7 @@ function setUpSearchBar() {
 let savedGroups = {};
 async function loadDataFromStorageSync() {
   let keys = await chrome.storage.sync.get(["savedGroupsForSync"])
-
+  console.log(keys)
   // console.log(keys)
   if(keys == null){
     updateLocalStorageKey()
