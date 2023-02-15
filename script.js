@@ -80,7 +80,7 @@ async function loadDataFromStorageSync() {
   let keys = await chrome.storage.sync.get(["savedGroupsForSync"])
   console.log(keys)
   // console.log(keys)
-  if(keys == null){
+  if(keys == null || keys.savedGroupsForSync == undefined){
     updateLocalStorageKey()
   }else{
     await Promise.all(keys.savedGroupsForSync.map(async (key) => {
