@@ -22,11 +22,13 @@ Fix scrorll bar and transiston witdth.
 
 fix live tabs closing on close group
 
-Switch to White text87
-
-
-
 add more background image
+
+Fix max reads (local stoareg fall back)
+
+
+
+Switch to White text Done
 
 Make Options focusable Done
 

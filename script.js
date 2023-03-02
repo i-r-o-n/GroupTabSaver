@@ -141,7 +141,7 @@ function addGroupToStorage(element,liveSwitch=false) {
   // tempEl.tabinfo.live = savedGroups[element.tabinfo.title].tabinfo.live
 
   if(tempEl == savedGroups[element.tabinfo.title] && !liveSwitch){
-    // return
+    return
   }
     
   savedGroups[element.tabinfo.title] = tempEl
