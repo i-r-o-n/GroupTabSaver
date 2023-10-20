@@ -1,6 +1,6 @@
 # GroupTabSaver-extension
 ###Install Here: 
-(https://chrome.google.com/webstore/detail/group-tab-saver-new-tab/aoficjpojclhhkpfgmeeenmknpnbagak?hl=en&authuser=0)[https://chrome.google.com/webstore/detail/group-tab-saver-new-tab/aoficjpojclhhkpfgmeeenmknpnbagak?hl=en&authuser=0]
+[https://chrome.google.com/webstore/detail/group-tab-saver-new-tab/aoficjpojclhhkpfgmeeenmknpnbagak?hl=en&authuser=0](https://chrome.google.com/webstore/detail/group-tab-saver-new-tab/aoficjpojclhhkpfgmeeenmknpnbagak?hl=en&authuser=0)
 1. If you want to run it, 
 2. open chrome://extensions/
 3. turn on developer mode
