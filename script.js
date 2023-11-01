@@ -108,11 +108,12 @@ function resetLocalStorage() {
 
 // resetLocalStorage()
 //code for checking whether 2 arrays have the same contence
-const containsAll = (arr1, arr2) => 
-arr2.every(arr2Item => arr1.includes(arr2Item))
-
-const sameMembers = (arr1, arr2) => 
-          containsAll(arr1, arr2) && containsAll(arr2, arr1);
+function sameMembers(arr1, arr2) {
+    const set1 = new Set(arr1);
+    const set2 = new Set(arr2);
+    return arr1.every(item => set2.has(item)) &&
+        arr2.every(item => set1.has(item))
+}
 
 async function updateLocalStorageKey() {
   let currenlySavedKeys = await chrome.storage.sync.get("savedGroupsForSync");
