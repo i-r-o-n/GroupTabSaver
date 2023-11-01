@@ -82,6 +82,7 @@ async function loadDataFromStorageSync() {
   // console.log(keys)
   if(keys == null || keys.savedGroupsForSync == undefined){
     updateLocalStorageKey()
+    // console.log("had to update keys?")
   }else{
     await Promise.all(keys.savedGroupsForSync.map(async (key) => {
       
@@ -106,11 +107,29 @@ function resetLocalStorage() {
 };
 
 // resetLocalStorage()
+//code for checking whether 2 arrays have the same contence
+const containsAll = (arr1, arr2) => 
+arr2.every(arr2Item => arr1.includes(arr2Item))
 
-function updateLocalStorageKey() {
-  chrome.storage.sync.set({ "savedGroupsForSync": Object.keys(savedGroups) }).then(() => {
-    console.log("savedGroupsForSync is set to " + Object.keys(savedGroups));
-  });
+const sameMembers = (arr1, arr2) => 
+          containsAll(arr1, arr2) && containsAll(arr2, arr1);
+
+async function updateLocalStorageKey() {
+  let currenlySavedKeys = await chrome.storage.sync.get("savedGroupsForSync");
+  // console.log(currenlySavedKeys.savedGroupsForSync)
+  // console.log(Object.keys(savedGroups))
+  // console.log(sameMembers(currenlySavedKeys.savedGroupsForSync, Object.keys(savedGroups)))
+
+
+  // `true`
+
+  if(!sameMembers(currenlySavedKeys.savedGroupsForSync, Object.keys(savedGroups))){
+    chrome.storage.sync.set({ "savedGroupsForSync": Object.keys(savedGroups) }).then(() => {
+      console.log("updateLocalStorageKey updated savedGroupsForSync to " + Object.keys(savedGroups));
+    });
+  }
+
+
 };
 
 async function updateLocalStorage(element) {
@@ -141,6 +160,8 @@ function addGroupToStorage(element,liveSwitch=false) {
   if(savedGroups[element.tabinfo.title] != undefined){
     
     tempEl.tabinfo.live = savedGroups[element.tabinfo.title].tabinfo.live
+  }else{
+    element.tabinfo.live = true;
   }
   // tempEl.tabinfo.live = savedGroups[element.tabinfo.title].tabinfo.live
 

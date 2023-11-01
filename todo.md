@@ -4,6 +4,8 @@ add overall settings
 
     Add turn off seccond hand
 
+Put the handling of tabs into a servace worker 
+
 Fix long tab group names
 
 make search more custimizable 
