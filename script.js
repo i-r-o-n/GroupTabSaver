@@ -121,6 +121,10 @@ async function updateLocalStorage(element) {
 async function deleteFromLocalStorage(title) {
   chrome.storage.sync.remove(title);
   updateLocalStorageKey()
+
+  chrome.storage.sync.set({ "savedGroupsForSync": Object.keys(savedGroups) }).then(() => {
+    console.log("savedGroupsForSync is set to " + Object.keys(savedGroups));
+  });
 }
 
 // Adds or updates a tab group in the Global var and in the chrome sync storage
@@ -250,7 +254,6 @@ function getTabsFromStorage(live = false) {
         }
         
       }
-
       const newGroup = document.createElement("div");
       newGroup.classList.add("tabGroup");
       newGroup.id = `newGroup${filterXSS(element.tabinfo.title)}`

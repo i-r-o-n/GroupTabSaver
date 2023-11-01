@@ -24,7 +24,10 @@ fix live tabs closing on close group
 
 add more background image
 
-Fix max reads (local stoareg fall back)
+
+
+Make a service worker to watch for changes when tabs are closed. 
+    Fix max reads (local stoareg fall back)
 
 
 
