@@ -5,7 +5,8 @@ const NoGroup = chrome.tabGroups.TAB_GROUP_ID_NONE;
 const QueryInWindow = {windowId: chrome.windows.WINDOW_ID_CURRENT};
 function filterXSS(text) {
   // return text
-  return DOMPurify.sanitize(text, { USE_PROFILES: {} })
+  // return DOMPurify.sanitize(text, { USE_PROFILES: {} })
+  return text.replace(/[`~!@#$%^&*()|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, '');
 }
 
 
@@ -44,7 +45,8 @@ export class Reader {
     })
 
     let listToReturn = groups.map(group => {
-      group.title = DOMPurify.sanitize(group.title.replace(/ /g, "_"), { USE_PROFILES: { html: true } });
+      // group.title = DOMPurify.sanitize(group.title.replace(/ /g, "_"), { USE_PROFILES: { html: true } });
+      group.title = filterXSS(group.title.replace(/ /g, "_"))
       return {
         "tabinfo":group,
         tabs:[]

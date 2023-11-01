@@ -5,9 +5,12 @@ import {colorsKey,months} from "./dist/colors.js";
  * @param {string} text
  * @return {string}
  */
+
+
 function filterXSS(text) {
   // return text
-  return DOMPurify.sanitize(text, { USE_PROFILES: {} })
+  // return DOMPurify.sanitize(text, { USE_PROFILES: {} })
+  return text.replace(/[`~!@#$%^&*()|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, '');
 }
 
 

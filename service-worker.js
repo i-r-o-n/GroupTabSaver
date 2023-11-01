@@ -1,15 +1,5 @@
 import * as tabEditor from "./tabEditor.js";
 
-import {colorsKey,months} from "./dist/colors.js";
-/**
- * @param {string} text
- * @return {string}
- */
-function filterXSS(text) {
-  // return text
-  return DOMPurify.sanitize(text, { USE_PROFILES: {} })
-}
-
 
 
 // Set the global var savedGroups to the content stored in chrome sync
@@ -20,6 +10,7 @@ async function loadDataFromStorageSync() {
   // console.log(keys)
   if(keys == null || keys.savedGroupsForSync == undefined){
     updateLocalStorageKey()
+    // console.log("had to update keys?")
   }else{
     await Promise.all(keys.savedGroupsForSync.map(async (key) => {
       
@@ -44,11 +35,30 @@ function resetLocalStorage() {
 };
 
 // resetLocalStorage()
+//code for checking whether 2 arrays have the same contence
+function sameMembers(arr1, arr2) {
+    const set1 = new Set(arr1);
+    const set2 = new Set(arr2);
+    return arr1.every(item => set2.has(item)) &&
+        arr2.every(item => set1.has(item))
+}
 
-function updateLocalStorageKey() {
-  chrome.storage.sync.set({ "savedGroupsForSync": Object.keys(savedGroups) }).then(() => {
-    console.log("savedGroupsForSync is set to " + Object.keys(savedGroups));
-  });
+async function updateLocalStorageKey() {
+  let currenlySavedKeys = await chrome.storage.sync.get("savedGroupsForSync");
+  // console.log(currenlySavedKeys.savedGroupsForSync)
+  // console.log(Object.keys(savedGroups))
+  // console.log(sameMembers(currenlySavedKeys.savedGroupsForSync, Object.keys(savedGroups)))
+
+
+  // `true`
+
+  if(!sameMembers(currenlySavedKeys.savedGroupsForSync, Object.keys(savedGroups))){
+    chrome.storage.sync.set({ "savedGroupsForSync": Object.keys(savedGroups) }).then(() => {
+      console.log("updateLocalStorageKey updated savedGroupsForSync to " + Object.keys(savedGroups));
+    });
+  }
+
+
 };
 
 async function updateLocalStorage(element) {
@@ -79,6 +89,8 @@ function addGroupToStorage(element,liveSwitch=false) {
   if(savedGroups[element.tabinfo.title] != undefined){
     
     tempEl.tabinfo.live = savedGroups[element.tabinfo.title].tabinfo.live
+  }else{
+    element.tabinfo.live = true;
   }
   // tempEl.tabinfo.live = savedGroups[element.tabinfo.title].tabinfo.live
 
@@ -90,67 +102,41 @@ function addGroupToStorage(element,liveSwitch=false) {
   // console.log(savedGroups)
   getTabsFromStorage()
   updateLocalStorage(tempEl);
-  getTabs()
   console.log(tempEl)
 
 }
 
 
-// gets the tabs currenly open in the browser and displays them as edits and additons
-const newGroupsEl = document.getElementById('newGroups');
-function getTabs() {
+
+
+
+// Displays the saved tab groups (does not update savedGroups)
+function getTabsFromStorage(live = false) {
+  
   //imploment getting from extention
-  newGroupsEl.innerHTML = "";
-  // console.log(exampleData)
-  exampleData.forEach(element => {
-    if(element == null){
-      return
-    }
-    if(filterXSS(element.tabinfo.title) == "" ){
-      return
-    }
-    if(savedGroups[element.tabinfo.title] != undefined){
-      if(savedGroups[element.tabinfo.title].tabinfo.live == true ){
-        return
-      }
-    }
-
-      // console.log(element)
-      const newGroup = document.createElement("div");
-      newGroup.classList.add("tabGroup");
-      // newGroup.onclick = function() { addGroupToStorage(element); };
-
-      // console.log(element.tabinfo.title)
-      // console.log(savedGroups)
-      
-      // console.log(filterXSS(element.tabinfo.title))
-      let groupHtml = `
-          <button class="groupName" id=groupNameNew${filterXSS(element.tabinfo.title)}>
-            <span class="innerButtonText" >${filterXSS(element.tabinfo.title.replace(/_/g, " "))}</span>
-            <img src="/images/${!(element.tabinfo.title in savedGroups)? 'save' : 'update'}.svg" class="actionImg">
-          </button>
+  // if(!live){
+  //   tabGroupsEl.innerHTML="";
+  // }
+  
+  for (var key in savedGroups) {
     
-          <ul class="tabList">
-          `;
-      for (const tab of element.tabs) {
-        groupHtml += `<li>
-          <img src="${tab.favIconUrl}">
-          <a href="${tab.url}">${filterXSS(tab.title)}</a>
-        </li>`;
+    if (savedGroups.hasOwnProperty(key)) {
+      let element = savedGroups[key]
+      if(live) {
+        let newTabData = exampleData.find(el => {return el.tabinfo.title == key})
+        
+        if(savedGroups[key].tabinfo.live && newTabData != undefined){
+          newTabData.tabinfo.live == savedGroups[key].tabinfo.live
+          addGroupToStorage(newTabData)
+          element = savedGroups[key]
+        }else{
+          continue;
+        }
+        
       }
-      
-      groupHtml += `</ul>`;
-      newGroup.innerHTML = groupHtml;
-      newGroupsEl.appendChild(newGroup);
-      // console.log(document.getElementById(`groupNameNew${element.tabinfo.title}`))
-      // console.log(filterXSS(element.tabinfo.title))
-      let groupTouchTarget = document.getElementById(`groupNameNew${filterXSS(element.tabinfo.title)}`)
-      groupTouchTarget.addEventListener("click", () => {
-        addGroupToStorage(element)
-      });
-      groupTouchTarget.style.backgroundColor = colorsKey[element.tabinfo.color]
-    // }
-  })
+
+    }
+  }
 }
 
 function liveTabsUpdate() {
@@ -174,42 +160,41 @@ function liveTabsUpdate() {
 
 }
 
-async function onGroupUpdated() {
-// communicate group 
-// console.log("a tab group was updated!")
-exampleData = await tabEditor.Reader.getCurrentTabData();
-// console.log(exampleData)
-getTabs();
-liveTabsUpdate()
-// getTabsFromStorage();
-};
+class Listeners {
+  static init() {
+    chrome.tabGroups.onUpdated.addListener(Listeners.onGroupUpdated);
+    chrome.tabs.onUpdated.addListener(
+      Listeners.onGroupUpdated
+    )
+  };
 
-chrome.tabGroups.onUpdated.addListener(onGroupUpdated);
-chrome.tabs.onUpdated.addListener(onGroupUpdated);
+  
 
+  static async onGroupUpdated() {
+    // communicate group 
+    // console.log("a tab group was updated!")
+    exampleData = await tabEditor.Reader.getCurrentTabData();
+    // console.log(exampleData)
+    liveTabsUpdate()
+    // getTabsFromStorage();
+  };
+}
 
 let exampleData;
+async function init(){
 
-loadDataFromStorageSync()
-// console.log(tabEditor)
-setUpSearchBar()
-exampleData = tabEditor.Reader.getCurrentTabData();
+  await loadDataFromStorageSync()
+  // console.log(tabEditor)
+  exampleData = await tabEditor.Reader.getCurrentTabData();
+  
+  // console.log(exampleData)
 
-// console.log(exampleData)
+  getTabsFromStorage();
+  getTabsFromStorage(true);
 
-getTabs();
-getTabsFromStorage();
-getTabsFromStorage(true);
+  Listeners.init();
 
-//updates the tabs when the user goes back to the tab
-document.addEventListener("visibilitychange", async () => {
 
-if (!document.hidden) {
-    console.log(document.hidden)
-    await loadDataFromStorageSync()
-    exampleData = await tabEditor.Reader.getCurrentTabData();
-    getTabs();
-    getTabsFromStorage();
 }
-});
-// return exampleData
+
+init()
