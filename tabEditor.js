@@ -229,3 +229,21 @@ export function init() {
 }
 
 // init();
+
+export function getCondensedTabData(arrayOfTabs){
+  let result = []
+
+  for (let i = 0; i < arrayOfTabs.length; i++) {
+    result.push({
+      "favIconUrl":arrayOfTabs[i].favIconUrl,
+      "groupId":arrayOfTabs[i].groupId,
+      "id":arrayOfTabs[i].id,
+      "title":arrayOfTabs[i].title.substring(0, 50),
+      "url":arrayOfTabs[i].url,
+    })
+    // console.log(arrayOfTabs[i])
+  }
+
+
+  return result;
+}

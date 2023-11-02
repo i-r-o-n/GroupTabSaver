@@ -9,7 +9,7 @@ async function loadDataFromStorageSync() {
   console.log(keys)
   // console.log(keys)
   if(keys == null || keys.savedGroupsForSync == undefined){
-    updateLocalStorageKey()
+    // updateLocalStorageKey()
     // console.log("had to update keys?")
   }else{
     await Promise.all(keys.savedGroupsForSync.map(async (key) => {
@@ -44,26 +44,46 @@ function sameMembers(arr1, arr2) {
 }
 
 async function updateLocalStorageKey() {
-  let currenlySavedKeys = await chrome.storage.sync.get("savedGroupsForSync");
-  // console.log(currenlySavedKeys.savedGroupsForSync)
-  // console.log(Object.keys(savedGroups))
-  // console.log(sameMembers(currenlySavedKeys.savedGroupsForSync, Object.keys(savedGroups)))
+  //there should never be a reason to do this in the service worker
+  console.log("tried to update the list")
 
 
-  // `true`
+  // let currenlySavedKeys = await chrome.storage.sync.get("savedGroupsForSync");
+  // // console.log(currenlySavedKeys.savedGroupsForSync)
+  // // console.log(Object.keys(savedGroups))
+  // // console.log(sameMembers(currenlySavedKeys.savedGroupsForSync, Object.keys(savedGroups)))
 
-  if(!sameMembers(currenlySavedKeys.savedGroupsForSync, Object.keys(savedGroups))){
-    chrome.storage.sync.set({ "savedGroupsForSync": Object.keys(savedGroups) }).then(() => {
-      console.log("updateLocalStorageKey updated savedGroupsForSync to " + Object.keys(savedGroups));
-    });
-  }
+
+  // // `true`
+
+  // if(!sameMembers(currenlySavedKeys.savedGroupsForSync, Object.keys(savedGroups))){
+  //   chrome.storage.sync.set({ "savedGroupsForSync": Object.keys(savedGroups) }).then(() => {
+  //     console.log("updateLocalStorageKey updated savedGroupsForSync to " + Object.keys(savedGroups));
+  //   });
+  // }
 
 
 };
 
 async function updateLocalStorage(element) {
-  chrome.storage.sync.set({ [element.tabinfo.title]:  element})
-  updateLocalStorageKey()
+  let currenlySavedElement = await chrome.storage.sync.get(element.tabinfo.title);
+  // console.log(JSON.stringify(currenlySavedElement[element.tabinfo.title].tabinfo.color))
+  // console.log(JSON.stringify(element.tabinfo.color))
+
+  if(
+    JSON.stringify(currenlySavedElement[element.tabinfo.title].tabs) !== JSON.stringify(element.tabs)
+    || currenlySavedElement[element.tabinfo.title].tabinfo.color !== element.tabinfo.color
+    ){
+    chrome.storage.sync.set({ [element.tabinfo.title]:  element})
+    updateLocalStorageKey()
+    console.log("updated a local storage ellemet")
+    console.log(element.tabinfo.title + " had changes")
+
+  }else{
+    console.log(element.tabinfo.title + " had no changes")
+  }
+
+  
 };
 
 async function deleteFromLocalStorage(title) {
@@ -77,11 +97,14 @@ async function deleteFromLocalStorage(title) {
 
 // Adds or updates a tab group in the Global var and in the chrome sync storage
 function addGroupToStorage(element,liveSwitch=false) {
+  
   if(element.tabinfo == undefined){
     console.log("why would the addGroupToStorage el be undefinged")
     console.log(element)
     return
   }
+
+  element.tabs = tabEditor.getCondensedTabData(element.tabs)
   
   let tempEl = element
   // check if it's new or updating

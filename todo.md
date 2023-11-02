@@ -6,6 +6,8 @@ add overall settings
 
 Put the handling of tabs into a servace worker 
 
+Fix issue with super long urls
+
 Fix long tab group names
 
 make search more custimizable 

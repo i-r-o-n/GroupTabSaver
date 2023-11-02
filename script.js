@@ -136,9 +136,26 @@ async function updateLocalStorageKey() {
 
 };
 
+//this function is the same as the one in server-worker.js and needs to be consolidated
 async function updateLocalStorage(element) {
-  chrome.storage.sync.set({ [element.tabinfo.title]:  element})
-  updateLocalStorageKey()
+  let currenlySavedElement = await chrome.storage.sync.get(element.tabinfo.title);
+  // console.log(JSON.stringify(currenlySavedElement[element.tabinfo.title].tabinfo.color))
+  // console.log(JSON.stringify(element.tabinfo.color))
+
+  if(
+    JSON.stringify(currenlySavedElement[element.tabinfo.title].tabs) !== JSON.stringify(element.tabs)
+    || currenlySavedElement[element.tabinfo.title].tabinfo.color !== element.tabinfo.color
+    ){
+    chrome.storage.sync.set({ [element.tabinfo.title]:  element})
+    updateLocalStorageKey()
+    console.log("updated a local storage ellemet")
+    console.log(element.tabinfo.title + " had changes")
+
+  }else{
+    console.log(element.tabinfo.title + " had no changes")
+  }
+
+  
 };
 
 async function deleteFromLocalStorage(title) {
@@ -151,7 +168,7 @@ async function deleteFromLocalStorage(title) {
 }
 
 // Adds or updates a tab group in the Global var and in the chrome sync storage
-function addGroupToStorage(element,liveSwitch=false) {
+function addGroupToStorage(element,liveSwitch=false,saveToSync=true) {
   if(element.tabinfo == undefined){
     console.log("why would the addGroupToStorage el be undefinged")
     console.log(element)
@@ -159,6 +176,8 @@ function addGroupToStorage(element,liveSwitch=false) {
   }
   
   let tempEl = element
+
+  element.tabs = tabEditor.getCondensedTabData(element.tabs)
   // check if it's new or updating
   // Then if its updating set a loading time to catch other quick changes.
   if(savedGroups[element.tabinfo.title] != undefined){
@@ -176,7 +195,10 @@ function addGroupToStorage(element,liveSwitch=false) {
   savedGroups[element.tabinfo.title] = tempEl
   // console.log(savedGroups)
   getTabsFromStorage()
-  updateLocalStorage(tempEl);
+  if(saveToSync){
+    updateLocalStorage(tempEl);
+  }
+
   getTabs()
   console.log(tempEl)
 
@@ -272,7 +294,7 @@ function getTabsFromStorage(live = false) {
         
         if(savedGroups[key].tabinfo.live && newTabData != undefined){
           newTabData.tabinfo.live == savedGroups[key].tabinfo.live
-          addGroupToStorage(newTabData)
+          addGroupToStorage(newTabData,undefined,false)
           element = savedGroups[key]
         }else{
           continue;
