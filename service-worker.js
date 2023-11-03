@@ -69,8 +69,8 @@ async function updateLocalStorage(element) {
   let currenlySavedElement = await chrome.storage.sync.get(element.tabinfo.title);
   // console.log(JSON.stringify(currenlySavedElement[element.tabinfo.title].tabinfo.color))
   // console.log(JSON.stringify(element.tabinfo.color))
-
-  if(
+  if(currenlySavedElement[element.tabinfo.title] === undefined 
+    ||
     JSON.stringify(currenlySavedElement[element.tabinfo.title].tabs) !== JSON.stringify(element.tabs)
     || currenlySavedElement[element.tabinfo.title].tabinfo.color !== element.tabinfo.color
     ){
@@ -147,8 +147,12 @@ function getTabsFromStorage(live = false) {
       let element = savedGroups[key]
       if(live) {
         let newTabData = exampleData.find(el => {return el.tabinfo.title == key})
-        
-        if(savedGroups[key].tabinfo.live && newTabData != undefined){
+        if(savedGroups[key] === undefined){
+          delete savedGroups[key];
+          deleteFromLocalStorage(key);
+          continue;
+
+        }else if(savedGroups[key].tabinfo.live && newTabData != undefined){
           newTabData.tabinfo.live == savedGroups[key].tabinfo.live
           addGroupToStorage(newTabData)
           element = savedGroups[key]
