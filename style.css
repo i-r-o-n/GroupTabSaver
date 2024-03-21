@@ -386,6 +386,43 @@ img.hoverImage {
 }
 
 
+/* popup new style */
+
+.popup {
+  display: none;
+  position: absolute;
+  top:220px;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+  width: 600px;
+  z-index: 10;
+  background: rgb(68, 102, 131);
+  border-radius: 1em;
+  padding: 1em;
+}
+.popupImage {
+  width: 100%;
+}
+.popupClose {
+  color: black;
+  width: 40px;
+  background: lightgrey;
+  text-align: center;
+  height: 40px;
+  border-radius: 20px;
+  font-size: 24px;
+  position: absolute;
+  right: 1em;
+  top: 1em;
+}
+.popupClose:hover {
+
+  background: grey;
+
+}
+
 @media screen and (max-width: 750px) {
   #newGroups .tabGroup {
 
@@ -396,4 +433,11 @@ img.hoverImage {
   width: 100%;
   max-width: unset;
 }
+.popup {
+  top:220px;
+  left:10%;
+  width: 80%;
+}
+
+
 }

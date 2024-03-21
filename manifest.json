@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Group Tab Saver - New Tab",
   "description": "Load tab groups from a custom homepage",
-  "version": "1.0.3",
+  "version": "1.1.1",
   "chrome_url_overrides" : {
     "newtab": "index.html"
   },
@@ -15,6 +15,9 @@
     "tabs",
     "storage",
     "search"
+  ],
+  "host_permissions": [
+    "file:///*"
   ],
   "action": {
     "default_popup": "index.html"

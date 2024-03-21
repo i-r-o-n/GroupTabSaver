@@ -4,9 +4,15 @@ add overall settings
 
     Add turn off seccond hand
 
-Put the handling of tabs into a servace worker 
+    and switch time and data
+
+    add more background image
+
+Put the handling of tabs into a servace worker DONE
 
 Fix issue with super long urls
+
+Fix issue with file urls and gpo
 
 Fix long tab group names
 
@@ -26,7 +32,6 @@ Fix scrorll bar and transiston witdth.
 
 fix live tabs closing on close group
 
-add more background image
 
 
 

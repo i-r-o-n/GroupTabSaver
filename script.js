@@ -75,7 +75,16 @@ function setUpSearchBar() {
   // searchBox
 }
 
+async function setUpLocalStorageLinks() {
+  let localFileAccess = await chrome.extension.isAllowedFileSchemeAccess();
+  if(!localFileAccess) {
+    document.getElementById("noFileAccessPopup").style.display = "block";
+  }
 
+  document.getElementById("noFileAccessPopupClose").addEventListener("click", () => {
+    document.getElementById("noFileAccessPopup").style.display = "none";
+  });
+}
 
 // Set the global var savedGroups to the content stored in chrome sync
 let savedGroups = {};
@@ -486,6 +495,8 @@ async function init(){
     }
   });
   // return exampleData
+  setUpLocalStorageLinks();
+  
 }
 
 init()
