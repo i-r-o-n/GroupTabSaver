@@ -342,32 +342,7 @@ img.hoverImage {
   /* text-align: center; */
 }
 
-.groupContextMenu {
-  background: rgb(24 24 24 / 93%);
-  position: absolute;
-  top: 20px;
-  left: 28px;
-  display: none;
-  padding-top: .5em;
-  padding-bottom: .5em;
-  border-radius: 6px;
-  min-width: 9em;
-  
-}
 
-.deleteButtonReal {
-  border: 2px solid #505050;
-  background: none;
-  border-right: 0;
-  border-left: 0;
-  color: white;
-  /* border-color: #505050; */
-  width: 100%;
-  padding: 3px;
-}
-.deleteButtonReal:hover {
-  background-color: black;
-}
 
 .liveButton {
   border: 2px solid #505050;
